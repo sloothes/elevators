@@ -18,7 +18,7 @@ var octreeMeshHelpers = [];
 var octreeEdgesHelpers = [];
 
 var matcapsFolder = "/matcaps/";
-var elevatorsGeometryFolder = "/elevator/geometries/";
+var elevatorsGeometryFolder = "/elevators/geometries/";
 
 
 localPlayer.controller.maxSlopeGradient = 0.001; // Math.cos(THREE.Math.degToRad(89));
@@ -132,15 +132,15 @@ function octreeNodeHelper(node){
 
 (async function(){
 
-    var staircasesUrl     = elevatorsGeometryFolder + "staircase-outdoor.js";    //  materials: [4].
-    var stairoctreeUrl    = elevatorsGeometryFolder + "staircase-octree.js";
-    var onestoctreeUrl    = elevatorsGeometryFolder + "one-stair-octree-v1.js";
-    var elevatorCabineUrl = elevatorsGeometryFolder + "elevator-cabin.js";       //  materials: [6].
-    var elevatorFrameUrl  = elevatorsGeometryFolder + "elevator-doorframe.js";   //  materials: [6].
-    var railingPipeUrl    = elevatorsGeometryFolder + "railing-pipe.js";
-    var woodenRailingUrl  = elevatorsGeometryFolder + "wooden-railing.js";
-    var apartDoorLeafUrl  = elevatorsGeometryFolder + "apartment-doorleaf.js";  //  materials: [4].
-    var apartDoorFrameUrl = elevatorsGeometryFolder + "apartment-doorframe.js"; //  materials: [2].
+    var staircasesUrl     = elevatorsGeometryFolder + "staircase-outdoor.json";    //  materials: [4].
+    var stairoctreeUrl    = elevatorsGeometryFolder + "staircase-octree.json";
+    var onestoctreeUrl    = elevatorsGeometryFolder + "one-stair-octree.json";
+    var elevatorCabineUrl = elevatorsGeometryFolder + "elevator-cabin.json";       //  materials: [6].
+    var elevatorFrameUrl  = elevatorsGeometryFolder + "elevator-doorframe.json";   //  materials: [6].
+    var railingPipeUrl    = elevatorsGeometryFolder + "railing-pipe.json";
+    var woodenRailingUrl  = elevatorsGeometryFolder + "wooden-railing.json";
+    var apartDoorLeafUrl  = elevatorsGeometryFolder + "apartment-doorleaf.json";   //  materials: [4].
+    var apartDoorFrameUrl = elevatorsGeometryFolder + "apartment-doorframe.json";  //  materials: [2].
 
     var Signal = signals.Signal;
     var doorOpening = new Signal();
