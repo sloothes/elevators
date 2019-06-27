@@ -656,7 +656,7 @@ function octreeNodeHelper(node){
             var doorF71 = cloneElevatorDoor( geometry2, floorheight, "F71", doorF61, opendoor1 );
 
             function cloneElevatorDoor( geometry, height, name, seed, positionOpen ){
-                var door = new THREE.Mesh( geometry.clone(), elevatorDoorMaterial() );
+                var door = new THREE.Mesh( geometry.clone(), elevatorDoorMaterial );
                 door.position.copy( seed.position );
                 door.position.y += height; // floorheight;
                 door.name = ["elevator", "door", name].join(" "); 
