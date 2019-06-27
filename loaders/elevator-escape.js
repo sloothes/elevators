@@ -745,8 +745,8 @@ function octreeNodeHelper(node){
             var mirror = new THREE.Mirror( 
                 renderer, camera, { 
                     clipBias:0.003, 
-                    textureWidth: container.clientWidth,
-                    textureHeight: container.clientHeight, 
+                    textureWidth: sceneContainer.clientWidth,
+                    textureHeight: sceneContainer.clientHeight, 
                     color:0x888888,
                 },
             );
@@ -1007,8 +1007,8 @@ function octreeNodeHelper(node){
 
         //  Activate updater.
             $(elevatorSelector).addClass("update");
-        //  Update "$update" list to start updating.
-        //  $update = $(".update"); // at end of promise.all().
+        //  Update "$updates" list to start updating.
+        //  $updates = $(".update"); // at end of promise.all().
 
         //  Start elevator near to middle (descenting).
             animation.play( animation.data.length * startfactor );
