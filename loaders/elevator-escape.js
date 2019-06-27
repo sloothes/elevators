@@ -639,7 +639,7 @@ function octreeNodeHelper(node){
             var material = new THREE.MeshBasicMaterial({transparent:true, opacity:0.5, side:2});
             var elevator = new THREE.Mesh(geometry, material);
             elevator.name = selector;
-            elevator.rotation.x = THREE.Math.degToRad( -90 ); // IMPORTANT //
+            elevator.rotation.x = THREE.Math.degToRad( -90 );
 
         //  Geometry uuid.
             var uuid = elevator.geometry.uuid;
@@ -997,7 +997,7 @@ function octreeNodeHelper(node){
 
         }).then( function(){
         //  Update "$renders" list to start rendering.
-            $renders = $(".render"); // $("input[type=hidden].render");
+            if ( mirrorMode ) $renders = $(".render");
         });
 
     //  Elevator walls.
@@ -1014,7 +1014,7 @@ function octreeNodeHelper(node){
             octreeGeometries["elevator_back_wall"] = mesh.geometry.uuid;
 
             var mesh = mesh.clone();
-            mesh.position.set( x, y+(h/2), z+(d/2)  ); // ok.
+            mesh.position.set( x, y+(h/2), z+(d/2)  );
             octree.importThreeMesh( mesh );
             octreeMeshHelpers.push( mesh );
             var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
@@ -1024,7 +1024,7 @@ function octreeNodeHelper(node){
             }
 
         //  Remove octree mesh helpers.
-            setTimeout( () => {
+            setTimeout( function(){
                 if ( !wireframe ) return;
                 octreeMeshHelpers.forEach( function( item, i ){
                     scene.remove( octreeMeshHelpers[i] );
@@ -1047,7 +1047,7 @@ function octreeNodeHelper(node){
             octreeGeometries["elevator_side_wall"] = mesh.geometry.uuid;
 
             var mesh = mesh.clone();
-            mesh.position.set( x-15, y+(h/2), z+(d/2)  ); // ok.
+            mesh.position.set( x-15, y+(h/2), z+(d/2)  );
             octree.importThreeMesh( mesh );
             octreeMeshHelpers.push( mesh );
             var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
@@ -1057,7 +1057,7 @@ function octreeNodeHelper(node){
             }
 
             var mesh = mesh.clone();
-            mesh.position.set( x+15, y+(h/2), z+(d/2)  ); // ok.
+            mesh.position.set( x+15, y+(h/2), z+(d/2)  );
             octree.importThreeMesh( mesh );
             octreeMeshHelpers.push( mesh );
             var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
@@ -1067,7 +1067,7 @@ function octreeNodeHelper(node){
             }
 
         //  Remove octree mesh helpers.
-            setTimeout( () => {
+            setTimeout( function(){
                 if ( !wireframe ) return;
                 octreeMeshHelpers.forEach( function( item, i ){
                     scene.remove( octreeMeshHelpers[i] );
