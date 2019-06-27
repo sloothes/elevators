@@ -216,7 +216,7 @@ function octreeNodeHelper(node){
         }
 
         elevatorData.length = key.time;
-        debugMode && console.log( "ascent elevatorData:", elevatorData );
+        debugMode && console.log({"ascent elevatorData": elevatorData});
 
 
     //  Descent.
@@ -242,7 +242,7 @@ function octreeNodeHelper(node){
         }
 
         elevatorData.length = key.time;
-        debugMode && console.log( "descent elevatorData:", elevatorData );
+        debugMode && console.log({"descent elevatorData": elevatorData});
 
 
         if ( true ) {
@@ -733,7 +733,7 @@ function octreeNodeHelper(node){
 
         //  Create elevator animation.
             var animation = new THREE.Animation( animator, elevatorData );
-            debugMode && console.log( "animation:", animation );
+            debugMode && console.log({"animation": animation});
 
         //  Start animation.
             if ( !timescale ) var timescale = 0.5;
