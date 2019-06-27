@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <meta name="description" contents="Welcome to trade center elevators">
+
+    <title>elevators (scc-v0.4.5)</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootbox-dialoges.css">
+    <link rel="stylesheet" href="/css/jquery.Jcrop.css">
+    <link rel="stylesheet" href="/css/joystick.css">
+
+    <script id="vertex-shader" src="/elevators/vertex-shader.js" type="text/text"></script>
+    <script id="fragment-shader" src="/elevators/fragment-shader.js" type="text/text"></script>
+
+    <script src="/socketcluster.js"></script>
+    <script src="/sc-codec-min-bin.js"></script>
+
+    <script>
+        debugMode = true;
+        console.log({
+            "debug": debugMode,
+            "scc-version": socketCluster.version,
+            "scc-clients": socketCluster.clients,
+        });
+    </script>
+
+</head>
+
+<body>
+
+<style>
+    body {
+        background-color: #b1c8e8;
+        margin: 0px;
+        overflow: hidden;
+    }
+    #scene-container {
+        height:100vh;
+    }
+    .middle > * {
+        margin:auto;
+        position:absolute;
+        top:0; bottom:0;
+        left:0; right:0;
+        height:fit-content;
+        width:fit-content;
+    }
+</style>
+
+<div id="scene-container"></div>
+<div class="joystick-controls" id="joystick-controls-1"></div>
+<div class="joystick-controls" id="joystick-controls-2"></div>
+
+<script src="/js/w3.js"></script>
+<script src="/js/rawinflate.js"></script>
+<script src="/js/rawdeflate.js"></script>
+<script src="/js/store2.js"></script>
+<script src="/js/Objectid.js"></script>
+<script src="/js/zangodb.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/jquery-ui.js"></script>
+<script src="/js/jquery.Jcrop.js"></script>
+<script src="/js/bootbox.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/DeviceDetector.js"></script>
+<script src="/js/MathDecimalAdjustment.js"></script>
+<script src="/js/watermark.js"></script>
+<script src="/js/validator.js"></script>
+<script src="/js/system.min.js"></script>
+<script src="/js/signals.min.js"></script>
+<script src="/js/command.js"></script>
+<script src="/AW3D_db/AW3D.db.js"></script>
+<script src="/three/three.js"></script>
+<script src="/three/EditorControls.js"></script>
+<script src="/three/Detector.js"></script>
+<script src="/three/Projector.js"></script>
+<script src="/three/Animation.js"></script>
+<script src="/three/AnimationHandler.js"></script>
+<script src="/three/KeyFrameAnimation.js"></script>
+<script src="/three/SubdivisionModifier.js"></script>
+<script src="/three/UVsDebug.js"></script>
+<script src="/three/shader.js"></script>
+<script src="/js/MW.js"></script>
+<script src="/js/MWtps.js"></script>
+<script src="/js/VirtualInput.js"></script>
+<script src="/js/scene-helpers.js"></script>
+<script src="/js/edges-helpers.js"></script>
+<script src="/elevators/scene.js"></script>
+<script src="/elevators/world.js"></script>
+<script src="/AW3D/AW3D-dev0.3.6.js"></script>
+<script src="/js/PlayerController.js"></script>
+<script src="/js/cameraControl.js"></script>
+<script src="/js/KeyInputControls.js"></script>
+<script src="/js/JoystickControls.js"></script>
+<script src="/js/jquery-update-engine.js"></script>
+<script src="/js/jquery-render-engine.js"></script>
+<script src="/js/runtime.js"></script>
+
+</body>
+</html>
+
