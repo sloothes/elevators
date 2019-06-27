@@ -751,8 +751,6 @@ function octreeNodeHelper(node){
 
             elevatorUpdater.elevator = elevator;
 
-            var collisionCandidate = localPlayer.controller.collisionCandidate;
-            var animationCache = animator.animationCache.animations[animation.data.name]; // e.g. "elevetor"
 
         //  Resolving the octree elevator problem:
         //  You add a elevator plane with the same geometry uuid on every octree partition (floor). 
@@ -772,11 +770,12 @@ function octreeNodeHelper(node){
             var doorOpening = new Signal();
             var doorClosing = new Signal();
 
+            var collisionCandidate = localPlayer.controller.collisionCandidate;
+
             doorOpening.add(function( door ){
 
                 var currentTime = animation.currentTime;
-            //  var collisionCandidate = localPlayer.controller.collisionCandidate;
-            //  var animationCache = animator.animationCache.animations[animation.data.name]; // "elevetor"
+                var animationCache = animator.animationCache.animations[animation.data.name]; // e.g. "elevetor"
 
                 var prevKeyIndex = animationCache.prevKey.pos.index;
                 var nextKeyIndex = animationCache.nextKey.pos.index;
@@ -801,8 +800,7 @@ function octreeNodeHelper(node){
             doorClosing.add(function( door ){
 
                 var currentTime = animation.currentTime;
-            //  var collisionCandidate = localPlayer.controller.collisionCandidate;
-            //  var animationCache = animator.animationCache.animations[animation.data.name]; // "elevetor"
+                var animationCache = animator.animationCache.animations[animation.data.name]; // e.g. "elevetor"
 
                 var prevKeyIndex = animationCache.prevKey.pos.index;
                 var nextKeyIndex = animationCache.nextKey.pos.index;
