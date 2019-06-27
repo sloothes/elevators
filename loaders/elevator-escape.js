@@ -618,8 +618,8 @@ function octreeNodeHelper(node){
 
         //  Elevator door F0 (F00/F01).
 
-            var doorF00 = new THREE.Mesh( geometry1.clone(), elevatorDoorMaterial() );
-            var doorF01 = new THREE.Mesh( geometry2.clone(), elevatorDoorMaterial() );
+            var doorF00 = new THREE.Mesh( geometry1.clone(), elevatorDoorMaterial );
+            var doorF01 = new THREE.Mesh( geometry2.clone(), elevatorDoorMaterial );
             doorF00.position.set( x-9, y+22.5, z+41.5);  doorF00.name = "elevator door F00"; 
             doorF01.position.set( x+9, y+22.5, z+41.5);  doorF01.name = "elevator door F01";
             doorF00.positionClose = parseFloat(doorF00.position.x);         debugMode && console.log( "door F00 positionClose:", doorF00.positionClose );
