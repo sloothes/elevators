@@ -751,7 +751,6 @@ function octreeNodeHelper(node){
 
             elevatorUpdater.elevator = elevator;
 
-
         //  Resolving the octree elevator problem:
         //  You add a elevator plane with the same geometry uuid on every octree partition (floor). 
         //  You do not need to create animator or update every floor. The trick is every plane to
@@ -765,19 +764,16 @@ function octreeNodeHelper(node){
         //  and update the player controller collisionCandidate faces vectors (a, b, c) of this 
         //  geometry.meshID (but not to every partition); the clones meshes do not need update task.
 
-        //  Elevator doors handlers. ( EXPERIMENTAL )
+        //  Elevator doors handlers.
 
             var doorOpening = new Signal();
             var doorClosing = new Signal();
 
             doorOpening.add(function( door ){
 
+                var name = animation.data.name; // e.g. "elevetor"
                 var currentTime = animation.currentTime;
-                var animationCache = animator.animationCache.animations[animation.data.name]; // e.g. "elevetor"
-
-                var prevKeyIndex = animationCache.prevKey.pos.index;
-                var nextKeyIndex = animationCache.nextKey.pos.index;
-                var prevKeyTime = animationCache.prevKey.pos.time;
+                var nextKeyTime = animator.animationCache.animations[name].nextKey.pos.time;
 
                 var offset = (prevKeyTime - currentTime);
 
@@ -797,12 +793,9 @@ function octreeNodeHelper(node){
 
             doorClosing.add(function( door ){
 
+                var name = animation.data.name; // e.g. "elevetor"
                 var currentTime = animation.currentTime;
-                var animationCache = animator.animationCache.animations[animation.data.name]; // e.g. "elevetor"
-
-                var prevKeyIndex = animationCache.prevKey.pos.index;
-                var nextKeyIndex = animationCache.nextKey.pos.index;
-                var nextKeyTime = animationCache.nextKey.pos.time;
+                var nextKeyTime = animator.animationCache.animations[name].nextKey.pos.time;
 
                 var offset = (nextKeyTime - currentTime); 
 
@@ -824,15 +817,16 @@ function octreeNodeHelper(node){
 
             //  Current floor.
                 elevatorUpdater.floor = elevator.floor = parseInt( animator.position.y / floorheight );
-        /*
-            //  Elevator doors handler. ( EXPERIMENTAL )
-                var currentTime = animation.currentTime;
-                var collisionCandidate = localPlayer.controller.collisionCandidate;
-                var animationCache = animator.animationCache.animations[animation.data.name]; // "elevetor"
+
+            //  Elevator doors handler.
+                var name = animation.data.name; // e.g. "elevetor"
+                var animationCache = animator.animationCache.animations[name];
+
+                var currentTime  = animation.currentTime;
                 var prevKeyIndex = animationCache.prevKey.pos.index;
                 var nextKeyIndex = animationCache.nextKey.pos.index;
             //  debugMode && console.log( animationCache.prevKey.pos.index, animationCache.nextKey.pos.index );
-        */
+
                 switch( prevKeyIndex, nextKeyIndex){
 
                 //  BASE FLOOR.
