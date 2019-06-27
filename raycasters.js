@@ -38,8 +38,8 @@
 
 //  Activate updater.
     $(raycasterSelector).addClass("update");
-//  Update "$update" list to start updating.
-    $update = $("input[type=hidden].update");
+//  Update "$updates" list to start updating.
+    $updates = $("input[type=hidden].update");
 
     function rayHelper(sphere, ray){
         var geometry = new THREE.Geometry();
