@@ -1199,6 +1199,7 @@ function octreeNodeHelper(node){
                     });
                     mesh.material.materials[1] = material;
                     mesh.material.materials[2] = material;
+                    mesh.material.materials[2].emissiveIntensity = 2;
                     material.emissiveMap.needsUpdate = true;
                     material.needsUpdate = true;
                     $(img).remove();
