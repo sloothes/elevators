@@ -61,9 +61,10 @@
             debugMode && console.log({"skeleton":skeleton});
         });
 
+        localPlayer.outfit.removeAll(); // important.
+
     //  Startup.
 
-        localPlayer.outfit.removeAll(); // important.
         localPlayer.outfit.setGender("male");
         localPlayer.outfit.add(
             {body: male.body},
