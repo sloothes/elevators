@@ -662,12 +662,14 @@ function octreeNodeHelper(node){
                 door.name = ["elevator", "door", name].join(" "); 
                 door.positionClose = parseFloat(door.position.x);
                 door.positionOpen  = parseFloat( positionOpen );
-                debugMode && console.log( "door %s positionOpen:", name, door.positionOpen );
                 door.filter = filter( door );
                 octree.importThreeMesh( door ); 
                 octreeGeometries[ "elevator_door_" + name ] = door.geometry.uuid;
                 if ( rigidMode ) cameraControls.rigidObjects.push( door );
-                debugMode && console.log( "elevator door %s:", name, door );
+                debugMode && console.log({
+                    [`elevator door ${name}`]: door,
+                    "positionOpen": door.positionOpen,
+                });
                 scene.add(door);
                 return door;
             }
