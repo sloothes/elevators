@@ -1198,7 +1198,7 @@ function octreeNodeHelper(node){
                         shading: THREE.SmoothShading,
                     });
                     mesh.material.materials[1] = material;
-                    mesh.material.materials[2] = material;
+                    mesh.material.materials[2] = material.clone();
                     mesh.material.materials[2].emissiveIntensity = 2;
                     material.emissiveMap.needsUpdate = true;
                     material.needsUpdate = true;
