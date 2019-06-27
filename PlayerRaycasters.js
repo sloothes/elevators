@@ -1,4 +1,4 @@
-//  Player raycasters.js
+//  PlayerRaycasters.js
 
 //  var near = 0;        //  cameraControls.minRadius; 
 //  var far  = Infinity; //  cameraControls.maxRadius;
