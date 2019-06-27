@@ -1401,7 +1401,7 @@ function octreeNodeHelper(node){
                 mesh.name = "wall back";
                 octreeGeometries["wall_back"] = mesh.geometry.uuid;
                 return( mesh );
-            }).then( function( mesh ){
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x-40, y+(roofheight/2), z+0 ); // ok.
                 octreeMeshHelpers.push( mesh );
@@ -1411,7 +1411,7 @@ function octreeNodeHelper(node){
                     scene.add( mesh );   // optional.
                     scene.add( helper ); // optional.
                 }
-            })();
+            });
 
             await (async function(){
                 var geometry = new THREE.BoxGeometry(10, roofheight, 60, 1,1,1 );
@@ -1419,7 +1419,7 @@ function octreeNodeHelper(node){
                 mesh.name = "wall side";
                 octreeGeometries["wall_side"] = mesh.geometry.uuid;
                 return mesh;
-            }).then( function( mesh ){
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x+20, y+(roofheight/2), z+25 ); // ok.
                 octreeMeshHelpers.push( mesh );
@@ -1429,7 +1429,7 @@ function octreeNodeHelper(node){
                     scene.add( mesh );   // optional.
                     scene.add( helper ); // optional.
                 }
-            })();
+            });
 
         //  Elevator walls.
 
@@ -1439,7 +1439,7 @@ function octreeNodeHelper(node){
                 mesh.name = "elevator side wall";
                 octreeGeometries["elevator_side_wall"] = mesh.geometry.uuid;
                 return mesh;
-            }).then( function( mesh ){
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x-93, y+(roofheight/2), z+22.5  ); // ok.
                 octreeMeshHelpers.push( mesh );
@@ -1449,7 +1449,7 @@ function octreeNodeHelper(node){
                     scene.add( mesh );   // optional.
                     scene.add( helper ); // optional.
                 }
-            })();
+            });
 
         //  Stairs middle walls.
 
@@ -1459,7 +1459,7 @@ function octreeNodeHelper(node){
                 octreeGeometries["wall_stairs_middle"] = mesh.geometry.uuid;
                 mesh.name = "wall stairs middle";
                 return mesh;
-            }).then( function( mesh ){
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x-35, y+(roofheight/2), z+25 ); // ok.
                 octreeMeshHelpers.push( mesh );
@@ -1480,7 +1480,7 @@ function octreeNodeHelper(node){
                     scene.add( mesh );   // optional.
                     scene.add( helper ); // optional.
                 }
-            })();
+            });
 
         //  Stairs middle columns.
 
@@ -1490,7 +1490,7 @@ function octreeNodeHelper(node){
                 octreeGeometries["column_stairs_middle"] = mesh.geometry.uuid;
                 mesh.name = "column stairs middle";
                 return mesh;
-            }).then( function( mesh ){
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x-60, y+(roofheight/2), z+25 ); // ok.
                 mesh.rotation.y = THREE.Math.degToRad( -90 )
@@ -1546,7 +1546,7 @@ function octreeNodeHelper(node){
                     scene.add( mesh );   // optional.
                     scene.add( helper ); // optional.
                 }
-            })();
+            });
 
         //  Flatboxes.
 
@@ -1556,7 +1556,7 @@ function octreeNodeHelper(node){
                 mesh.name = "flatbox";
                 octreeGeometries["flatbox"] = mesh.geometry.uuid;
                 return mesh;
-            }).then( function( mesh ){
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x+5, y+10, z+25 );
                 octreeMeshHelpers.push( mesh );
@@ -1567,7 +1567,7 @@ function octreeNodeHelper(node){
                     scene.add( helper ); // optional.
                 }
                 addflatstair( mesh );
-            })();
+            });
 
             await (async function(){
                 var geometry = new THREE.BoxGeometry(85, 20, 26, 1,1,1 );
@@ -1575,7 +1575,7 @@ function octreeNodeHelper(node){
                 mesh.name = "understairs flatbox";
                 octreeGeometries["understairs_flatbox"] = mesh.geometry.uuid;
                 return mesh;
-            }).then( function( mesh ){
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x-52.5, y+10, z+13 ); // ok.
                 octreeMeshHelpers.push( mesh );
@@ -1585,8 +1585,7 @@ function octreeNodeHelper(node){
                     scene.add( mesh );   // optional.
                     scene.add( helper ); // optional.
                 }
-            //  addflatstair( mesh );
-            })();
+            });
 
             await (async function(){
                 var geometry = new THREE.BoxGeometry(55, 16, 26, 1,1,1 );
@@ -1594,7 +1593,7 @@ function octreeNodeHelper(node){
                 mesh.name = "understairs flatbox 1";
                 octreeGeometries["understairs_flatbox_1"] = mesh.geometry.uuid;
                 return mesh;
-            }).then( function( mesh ){
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x-67.5, y+28, z+13 ); // ok.
                 octreeMeshHelpers.push( mesh );
@@ -1604,7 +1603,7 @@ function octreeNodeHelper(node){
                     scene.add( mesh );   // optional.
                     scene.add( helper ); // optional.
                 }
-            })();
+            });
 
         //  Flatstairs.
 
@@ -1614,7 +1613,7 @@ function octreeNodeHelper(node){
                 mesh.name = "flatstair";
                 octreeGeometries["flatstair"] = mesh.geometry.uuid;
                 return mesh;
-            }).then( function( mesh ){
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x+5, y-2+(floorheight/3), z+25 );
                 for (var i = 0; i < 10; i++) {
@@ -1629,7 +1628,7 @@ function octreeNodeHelper(node){
                     }
                     addflatstair( mesh );
                 }
-            })();
+            });
 
             await (async function(){
                 var geometry = new THREE.BoxGeometry(40, 4, 50, 1,1,1 );
@@ -1637,7 +1636,7 @@ function octreeNodeHelper(node){
                 mesh.name = "elevator flatstair";
                 octreeGeometries["elevator_flatstair"] = mesh.geometry.uuid;
                 return mesh;
-            }).then( function( mesh ){
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x-80, y-2, z+25 );
                 octreeMeshHelpers.push( mesh );
@@ -1674,7 +1673,7 @@ function octreeNodeHelper(node){
                     }
                     addflatstair( mesh );
                 }
-            })();
+            });
 
         //  Railwalls.
 
@@ -1683,8 +1682,8 @@ function octreeNodeHelper(node){
                 var mesh = new THREE.Mesh(geometry, material);
                 mesh.name = "railwall 1";
                 octreeGeometries["railwall_1"] = mesh.geometry.uuid;
-                resolve( mesh );
-            }).then( function( mesh ){
+                return mesh;
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x+5, y+(floorheight/2)-2, z+50  );
                 octreeMeshHelpers.push( mesh );
@@ -1694,7 +1693,7 @@ function octreeNodeHelper(node){
                     scene.add( mesh );   // optional.
                     scene.add( helper ); // optional.
                 }
-            })();
+            });
 
             await (async function(){
                 var geometry = new THREE.BoxGeometry(30, 4*floorheight/3, 8, 1,1,1 );
@@ -1702,7 +1701,7 @@ function octreeNodeHelper(node){
                 mesh.name = "railwall 2";
                 octreeGeometries["railwall_2"] = mesh.geometry.uuid;
                 return mesh;
-            }).then( function( mesh ){
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x+5, y+(7*floorheight/3)-2, z+50  );
                 octreeMeshHelpers.push( mesh );
@@ -1725,7 +1724,7 @@ function octreeNodeHelper(node){
                         scene.add( helper ); // optional.
                     }
                 }
-            })();
+            });
 
             await (async function(){
                 var geometry = new THREE.BoxGeometry(40, 4*floorheight/3, 8, 1,1,1 );
@@ -1733,7 +1732,7 @@ function octreeNodeHelper(node){
                 mesh.name = "railwall 3";
                 octreeGeometries["railwall_3"] = mesh.geometry.uuid;
                 return mesh;
-            }).then( function( mesh ){
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x-77.5, y+(4*floorheight/3)-2, z+50  );
                 octreeMeshHelpers.push( mesh );
@@ -1756,7 +1755,7 @@ function octreeNodeHelper(node){
                         scene.add( helper ); // optional.
                     }
                 }
-            })();
+            });
 
             await (async function(){
                 var geometry = new THREE.BoxGeometry(15, 66, 35, 1,1,1 );
@@ -1764,7 +1763,7 @@ function octreeNodeHelper(node){
                 mesh.name = "railwall deadend";
                 octreeGeometries["railwall_deadend"] = mesh.geometry.uuid;
                 return mesh;
-            }).then( function( mesh ){
+            })().then( function( mesh ){
                 var mesh = mesh.clone();
                 mesh.position.set( x-10, y+roofheight-(floorheight/2)-2, z+13  ); // ok. 446.5
                 octreeMeshHelpers.push( mesh );
@@ -1774,7 +1773,7 @@ function octreeNodeHelper(node){
                     scene.add( mesh );   // optional.
                     scene.add( helper ); // optional.
                 }
-            })();
+            });
 
         //  Rails.
 
