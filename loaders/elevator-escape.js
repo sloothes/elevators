@@ -1191,11 +1191,11 @@ function octreeNodeHelper(node){
                     var canvas = makePowerOfTwo( img, true );
                     var texture = new THREE.Texture( canvas );
                     mesh.material.materials[2] = new THREE.MeshStandardMaterial({ 
-                        color: 0xffffff, 
-                        map: texture,
+                        emissive: 0xffffff, 
+                        emissiveMap: texture,
                         shading: THREE.SmoothShading,
                     });
-                    mesh.material.materials[2].map.needsUpdate = true;
+                    mesh.material.materials[2].emissiveMap.needsUpdate = true;
                     $(img).remove();
                 });
 
