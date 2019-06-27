@@ -1,0 +1,34 @@
+{
+    "normals":[0,-0,-1,0,-0,-1,0.771,0,-0.637,-0.771,-0,-0.637,0,-1,-0,0,1,0],
+    "uvs":[],
+    "metadata":{
+        "normals":6,
+        "uvs":0,
+        "vertices":8,
+        "generator":"io_three",
+        "type":"Geometry",
+        "version":3,
+        "faces":6,
+        "materials":1
+    },
+    "vertices":[-2.858,2.386,-11.046,-2.858,2.386,11.046,2.858,2.386,-11.046,2.858,2.386,11.046,6.798,-2.386,-11.046,-6.798,-2.386,-11.046,-6.798,-2.386,11.046,6.798,-2.386,11.046],
+    "faces":[35,0,1,3,2,0,0,0,0,0,35,5,6,7,4,0,1,1,1,1,35,3,7,4,2,0,2,2,2,2,35,0,5,6,1,0,3,3,3,3,35,1,3,7,6,0,4,4,4,4,35,2,0,5,4,0,5,5,5,5],
+    "name":"one_stair_octree",
+    "materials":[{
+        "specularCoef":50,
+        "visible":true,
+        "blending":"NormalBlending",
+        "colorEmissive":[0,0,0],
+        "DbgName":"octree_hall_material",
+        "colorDiffuse":[0.64,0.64,0.64],
+        "DbgIndex":0,
+        "depthTest":true,
+        "transparent":false,
+        "opacity":1,
+        "shading":"lambert",
+        "DbgColor":15658734,
+        "colorSpecular":[0.5,0.5,0.5],
+        "wireframe":false,
+        "depthWrite":true
+    }]
+}
