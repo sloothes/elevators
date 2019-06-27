@@ -187,8 +187,8 @@ function octreeNodeHelper(node){
 
 
 //  Build elevator.
-    buildElevator( new THREE.Vector3( 250,0,0), 0, "elevatorR", 0.5, 0.75, false ),
-    buildElevator( new THREE.Vector3(-250,0,0), 0, "elevatorL", 0.75, 0.25, false ),
+    await buildElevator( new THREE.Vector3( 250,0,0), 0, "elevatorR", 0.5, 0.75, false );
+    await buildElevator( new THREE.Vector3(-250,0,0), 0, "elevatorL", 0.75, 0.25, false );
 
     async function buildElevator( position, rotation, selector, timescale, startfactor, wireframe ){
 
