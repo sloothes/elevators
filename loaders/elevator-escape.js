@@ -178,7 +178,7 @@ function octreeNodeHelper(node){
             door.position.x -= offset;
         //  debugMode && console.log( "closing position-x:", door.position.x );
         }
-    }
+    });
 
 
 
