@@ -1198,8 +1198,8 @@ function octreeNodeHelper(node){
                     });
                     mesh.material.materials[2] = material;
                     mesh.material.materials[3] = material;
-                    mesh.material.materials[2].emissiveMap.needsUpdate = true;
-                    mesh.material.materials[3].emissiveMap.needsUpdate = true;
+                    material.emissiveMap.needsUpdate = true;
+                    material.needsUpdate = true;
                     $(img).remove();
                 });
 
