@@ -770,8 +770,6 @@ function octreeNodeHelper(node){
             var doorOpening = new Signal();
             var doorClosing = new Signal();
 
-            var collisionCandidate = localPlayer.controller.collisionCandidate;
-
             doorOpening.add(function( door ){
 
                 var currentTime = animation.currentTime;
@@ -786,8 +784,8 @@ function octreeNodeHelper(node){
             //  debugMode && console.log( "opening offset:", offset );
                 if ( door.position.x - offset < door.positionOpen ) {
                 //  Update collision faces in player controller.
-                    collisionCandidate.filter(door.filter)
-                    .forEach( function( item ){
+                    localPlayer.controller.collisionCandidate
+                    .filter(door.filter).forEach( function( item ){
                         item.a.x -= offset;
                         item.b.x -= offset; 
                         item.c.x -= offset;
@@ -811,8 +809,8 @@ function octreeNodeHelper(node){
             //  debugMode && console.log( "closing offset:", offset );
                 if ( door.position.x - offset > door.positionClose ) {
                 //  Update collision faces in player controller.
-                    collisionCandidate.filter(door.filter)
-                    .forEach( function( item ){
+                    localPlayer.controller.collisionCandidate
+                    .filter(door.filter).forEach( function( item ){
                         item.a.x -= offset;
                         item.b.x -= offset; 
                         item.c.x -= offset;
@@ -958,6 +956,21 @@ function octreeNodeHelper(node){
 
                 }
 
+            //  Update elevator.
+                elevator.position.y = animator.position.y + elevatAdjust;
+
+            //  Update elevator collisions in player controller.
+                localPlayer.controller.collisionCandidate.filter(function( item ){
+                    return item.meshID == uuid;
+                }).forEach( function( item ){
+                    item.a.y = item.b.y = item.c.y = elevator.position.y;
+                });
+
+            //  Update cabine position.
+                if ( cabineMode ) cabine.position.y = elevator.position.y;
+
+            };
+
         /*
                 function doorOpening( door ){
                     var prevKeyTime = animationCache.prevKey.pos.time;
@@ -994,20 +1007,6 @@ function octreeNodeHelper(node){
                 }
         */
 
-            //  Update elevator.
-                elevator.position.y = animator.position.y + elevatAdjust;
-
-            //  Update elevator collisions in player controller.
-                localPlayer.controller.collisionCandidate.filter(function( item ){
-                    return item.meshID == uuid;
-                }).forEach( function( item ){
-                    item.a.y = item.b.y = item.c.y = elevator.position.y;
-                });
-
-            //  Update cabine position.
-                if ( cabineMode ) cabine.position.y = elevator.position.y;
-
-            };
 
         //  Activate updater.
             $(elevatorSelector).addClass("update");
