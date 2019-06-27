@@ -61,6 +61,18 @@
             debugMode && console.log({"skeleton":skeleton});
         });
 
+    //  Startup.
+
+        localPlayer.outfit.removeAll(); // important.
+        localPlayer.outfit.setGender("male");
+        localPlayer.outfit.add(
+            {body: male.body},
+            {eyes: male.eyes},
+            {hairs: male.hairs},
+            {costume: male.costume},
+            {shoes: male.shoes},
+        );
+
     //  Enable outfit direction visible.
         localPlayer.outfit.direction.visible = true;
 
