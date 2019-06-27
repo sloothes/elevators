@@ -70,11 +70,8 @@
     scene.add( sunLight, shadowHelper  );
 
     groundHelper = new GroundHelper(1000, 10);  
-    groundHelper.visible = true;
     axisCustomHelper = new CustomAxisHelper(5200);
-    axisCustomHelper.visible = true;
     axisOriginHelper = new OriginAxisHelper(1200);
-    axisOriginHelper.visible = true;
 
     clock = new THREE.Clock();
     projector = new THREE.Projector();
@@ -116,5 +113,11 @@
         mouse.x = ( e.clientX - rendererHalfWidth );
         mouse.y = ( e.clientY - rendererHalfHeight );
     }
+
+//  Settings.
+
+    groundHelper.visible = true;
+    axisCustomHelper.visible = true;
+    axisOriginHelper.visible = true;
 
 })();
