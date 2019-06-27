@@ -1194,6 +1194,7 @@ function octreeNodeHelper(node){
                         color: 0x000000,
                         emissive: 0xffffff, 
                         emissiveMap: texture,
+                        emissiveIntensity: 2,
                         shading: THREE.SmoothShading,
                     });
                     mesh.material.materials[2] = material;
