@@ -1152,6 +1152,68 @@ function octreeNodeHelper(node){
             return loadComponentAsset( json );
 
         }).then( function( mesh ){
+
+            var url = elevatorsGeometryFolder + "elevator-door.jpg";
+            caches.match( url ).then(function(response){
+
+                if ( !response ) 
+                    throw response;
+                else
+                    return response;
+
+            }).catch(function(err){
+
+            //  We use cors origin mode to avoid
+            //  texture tainted canvases, images.
+                return fetch( url, {
+                    mode: "cors",
+                    method: "GET",
+                });
+
+            }).then(async function(response){
+
+                var cache = await caches.open("textures")
+                    .then(function(cache){ return cache; });
+
+            //  Clone is needed because put() consumes the response body.
+            //  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
+
+                var clone = response.clone();
+                await cache.put( url, clone );
+                return response.blob();
+
+            }).then(function(blob){
+
+                var img = new Image();
+                img.crossOrigin = "anonymous";
+
+                $(img).on("load", function(){
+                    var canvas = makePowerOfTwo( img, true );
+                    var texture = new THREE.Texture( canvas );
+                    mesh.material.materials[2] = new THREE.MeshStandardMaterial({ 
+                        color: 0xffffff, 
+                        map: texture,
+                        shading: THREE.SmoothShading,
+                    });
+                    mesh.material.materials[2].map.needsUpdate = true;
+                    $(img).remove();
+                });
+
+            //  Get dataURL from blob.
+
+                var reader = new FileReader();
+                reader.onload = function() {
+                    img.src = reader.result;
+                };
+
+                reader.readAsDataURL(blob);
+
+            });
+
+            return mesh;
+
+        }).then( function( mesh ){
+
             mesh.name = "elevator frame";
 
             mesh.rotation.y = THREE.Math.degToRad( 90 );
