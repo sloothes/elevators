@@ -1197,8 +1197,8 @@ function octreeNodeHelper(node){
                         emissiveIntensity: 2,
                         shading: THREE.SmoothShading,
                     });
+                    mesh.material.materials[1] = material;
                     mesh.material.materials[2] = material;
-                    mesh.material.materials[3] = material;
                     material.emissiveMap.needsUpdate = true;
                     material.needsUpdate = true;
                     $(img).remove();
