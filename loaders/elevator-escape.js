@@ -1242,8 +1242,8 @@ function octreeNodeHelper(node){
     }
 
 //  Build stairtowers.
-    buildStairtower( new THREE.Vector3(370,0,0), 0, false ),
-//  buildStairtowerMirror( new THREE.Vector3(-310,0,0), 0, false ),
+    buildStairtower( new THREE.Vector3(370,0,0), 0, false );
+//  buildStairtowerMirror( new THREE.Vector3(-310,0,0), 0, false );
 
 //  Build stairtower.
     async function buildStairtower( position, rotation, wireframe ){
@@ -1974,10 +1974,7 @@ function octreeNodeHelper(node){
                 console.log( "Octree mesh helpers has been removed:", octreeMeshHelpers.filter(Boolean) );
             }, 100);
                 
-
-            scene.add( component );
-            return component; // stairstower.
-
+            scene.add( component );  // stairstower.
 
             function addflatstair( mesh ){
                 var mesh = mesh.clone();
