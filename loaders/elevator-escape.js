@@ -39,9 +39,9 @@ localPlayer.controller.maxSlopeGradient = 0.001; // Math.cos(THREE.Math.degToRad
     octreeGeometries.ground = ground.geometry.uuid;
     octreeHelpers( octree );
 
-    var floorlength = 8 // Math.pow(2, partition - 1);
-    var roofheight  = Math.abs( max.y ) + Math.abs( min.y );
-    var floorheight = roofheight / floorlength;
+var floorlength = 8 // Math.pow(2, partition - 1);
+var roofheight  = Math.abs( max.y ) + Math.abs( min.y );
+var floorheight = roofheight / floorlength;
 
 //  OCTREE HELPERS.
 
@@ -84,7 +84,7 @@ function octreeHelpers( octree ){
     });
 
 //  Remove octree mesh helpers.
-    setTimeout( () => {
+    setTimeout( function(){
         octreeMeshHelpers.forEach( function( item, i ){
             scene.remove( octreeMeshHelpers[i] );
             geometry.dispose();
@@ -120,7 +120,7 @@ function octreeNodeHelper(node){
     scene.add( helper );
 
 //  Remove octree mesh helpers.
-    setTimeout( () => {
+    setTimeout( function(){
         scene.remove( mesh );
         geometry.dispose();
         material.dispose();
@@ -711,7 +711,7 @@ function octreeNodeHelper(node){
                 var mirrorsRenderer = $('<input type="hidden">').get(0);
                 mirrorsRenderer.id = [ selector, "mirror" ].join("-");
                 var mirrorsRendererSelector = "#" + mirrorsRenderer.id;
-                $("#renders").append( mirrorsRenderer );        // IMPORTANT //
+                $("#renders").append( mirrorsRenderer );
                 $(mirrorsRendererSelector).addClass("mirror");
                 mirrorsRenderer.mirror = mirror;
 
@@ -724,10 +724,9 @@ function octreeNodeHelper(node){
                 if ( mirrorMode ) {
                     $(mirrorsRendererSelector).addClass("render");
                 //  Update "renders" list to start rendering.
-                    $renders = $(".render");
+                //  $renders = $(".render"); // at end of promise.all().
                 }
             }
-
 
         //  Elevator Animator.
 
@@ -817,7 +816,9 @@ function octreeNodeHelper(node){
                 }
             });
 
-            elevatorUpdater.update = () => {
+            var collisionCandidate = localPlayer.controller.collisionCandidate;
+
+            elevatorUpdater.update = function(){
 
             //  Current floor.
                 elevatorUpdater.floor = elevator.floor = parseInt( animator.position.y / floorheight );
@@ -825,7 +826,6 @@ function octreeNodeHelper(node){
             //  Elevator doors handler.
                 var name = animation.data.name; // e.g. "elevetor"
                 var animationCache = animator.animationCache.animations[name];
-                var collisionCandidate = localPlayer.controller.collisionCandidate;
 
                 var currentTime  = animation.currentTime;
                 var prevKeyIndex = animationCache.prevKey.pos.index;
@@ -967,43 +967,6 @@ function octreeNodeHelper(node){
 
             };
 
-        /*
-                function doorOpening( door ){
-                    var prevKeyTime = animationCache.prevKey.pos.time;
-                    var offset = (prevKeyTime - currentTime);
-                //  debugMode && console.log( "opening offset:", offset );
-                    if ( door.position.x - offset < door.positionOpen ) {
-                    //  Update collision faces in player controller.
-                        collisionCandidate.filter(door.filter)
-                        .forEach( function( item ){
-                            item.a.x -= offset;
-                            item.b.x -= offset; 
-                            item.c.x -= offset;
-                        });
-                        door.position.x -= offset; 
-                    //  debugMode && console.log( "opening position-x:", door.position.x );
-                    }
-                }
-
-                function doorClosing( door ){
-                    var nextKeyTime = animationCache.nextKey.pos.time;
-                    var offset = (nextKeyTime - currentTime); 
-                //  debugMode && console.log( "closing offset:", offset );
-                    if ( door.position.x - offset > door.positionClose ) {
-                    //  Update collision faces in player controller.
-                        collisionCandidate.filter(door.filter)
-                        .forEach( function( item ){
-                            item.a.x -= offset;
-                            item.b.x -= offset; 
-                            item.c.x -= offset;
-                        });
-                        door.position.x -= offset;
-                    //  debugMode && console.log( "closing position-x:", door.position.x );
-                    }
-                }
-        */
-
-
         //  Activate updater.
             $(elevatorSelector).addClass("update");
         //  Update "$updates" list to start updating.
@@ -1033,8 +996,8 @@ function octreeNodeHelper(node){
         //  return mesh;
 
         }).then( function(){
-        //  Update "$render" list to start rendering.
-            $render = $(".render"); // $("input[type=hidden].render");
+        //  Update "$renders" list to start rendering.
+            $renders = $(".render"); // $("input[type=hidden].render");
         });
 
     //  Elevator walls.
@@ -1962,7 +1925,7 @@ function octreeNodeHelper(node){
 
         //  Remove octree mesh helpers.
 
-            setTimeout( () => {
+            setTimeout( function(){
                 if ( !wireframe ) return;
                 octreeMeshHelpers.forEach( function( item, i ){
                     scene.remove( octreeMeshHelpers[i] );
