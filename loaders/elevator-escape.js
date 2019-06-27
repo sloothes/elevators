@@ -518,14 +518,14 @@ function octreeNodeHelper(node){
                     var canvas = makePowerOfTwo( img, true );
                     var texture = new THREE.Texture( canvas );
                     mesh.material.materials[1] = new THREE.MeshStandardMaterial({ 
-                        color: 0xffffff, 
-                        map: texture,
+                        emissive: 0xffffff, 
+                        emissiveMap: texture,
                         bumpMap: texture,
                         bumpScale: -0.03,
                         shading: THREE.SmoothShading,
                     });
-                    mesh.material.materials[1].map.needsUpdate = true;
                     mesh.material.materials[1].bumpMap.needsUpdate = true;
+                    mesh.material.materials[1].emissiveMap.needsUpdate = true;
                     $(img).remove();
                 });
 
@@ -1153,17 +1153,23 @@ function octreeNodeHelper(node){
 
         }).then( function( mesh ){
             mesh.name = "elevator frame";
+
             mesh.rotation.y = THREE.Math.degToRad( 90 );
             mesh.position.set( 0, 0, 41.5);
             component.add( mesh );
+
             return mesh;
+
         }).then( function( mesh ){
+
             for (var i = 1; i < floorlength; i++) {
                 var mesh = mesh.clone();
                 mesh.position.y += floorheight;
                 component.add( mesh );
             }
+
             return mesh;
+
         }).then( function( mesh ){
             scene.add( component );
             return component;
