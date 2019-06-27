@@ -132,6 +132,8 @@ function octreeNodeHelper(node){
 
 (async function(){
 
+    var Signal = signals.Signal;
+
     var staircasesUrl     = elevatorsGeometryFolder + "staircase-outdoor.json";    //  materials: [4].
     var stairoctreeUrl    = elevatorsGeometryFolder + "staircase-octree.json";
     var onestoctreeUrl    = elevatorsGeometryFolder + "one-stair-octree.json";
@@ -141,50 +143,6 @@ function octreeNodeHelper(node){
     var woodenRailingUrl  = elevatorsGeometryFolder + "wooden-railing.json";
     var apartDoorLeafUrl  = elevatorsGeometryFolder + "apartment-doorleaf.json";   //  materials: [4].
     var apartDoorFrameUrl = elevatorsGeometryFolder + "apartment-doorframe.json";  //  materials: [2].
-
-    var Signal = signals.Signal;
-    var doorOpening = new Signal();
-    var doorClosing = new Signal();
-
-    doorOpening.add(function( door ){
-        var prevKeyTime = animationCache.prevKey.pos.time;
-        var offset = (prevKeyTime - currentTime);
-    //  debugMode && console.log( "opening offset:", offset );
-        if ( door.position.x - offset < door.positionOpen ) {
-        //  Update collision faces in player controller.
-            collisionCandidate.filter(door.filter)
-            .forEach( function( item ){
-                item.a.x -= offset;
-                item.b.x -= offset; 
-                item.c.x -= offset;
-            });
-            door.position.x -= offset; 
-        //  debugMode && console.log( "opening position-x:", door.position.x );
-        }
-    });
-
-    doorClosing.add(function( door ){
-        var nextKeyTime = animationCache.nextKey.pos.time;
-        var offset = (nextKeyTime - currentTime); 
-    //  debugMode && console.log( "closing offset:", offset );
-        if ( door.position.x - offset > door.positionClose ) {
-        //  Update collision faces in player controller.
-            collisionCandidate.filter(door.filter)
-            .forEach( function( item ){
-                item.a.x -= offset;
-                item.b.x -= offset; 
-                item.c.x -= offset;
-            });
-            door.position.x -= offset;
-        //  debugMode && console.log( "closing position-x:", door.position.x );
-        }
-    });
-
-
-
-
-
-
 
 //  Build elevator.
     await buildElevator( new THREE.Vector3( 250,0,0), 0, "elevatorR", 0.5, 0.75, false );
@@ -674,22 +632,6 @@ function octreeNodeHelper(node){
                 return door;
             }
 
-/*
-            function elevatorDoorMaterial(){
-                var img = new Image();
-                img.crossOrigin = "anonymous";
-                $(img).on("load", matcapMaterial);
-                img.src = matcapsFolder + "ChromeReflect.jpg";
-                return matcapMaterial();
-                function matcapMaterial(){
-                    var normal = new THREE.Texture( normalPixel() );
-                    var matcap = new THREE.Texture( img );
-                    var material = new ShaderMaterial( normal, matcap );
-                    $(img).remove();
-                    return material;
-                }
-            }
-*/
 
         //  Elevator.
 
@@ -809,6 +751,9 @@ function octreeNodeHelper(node){
 
             elevatorUpdater.elevator = elevator;
 
+            var collisionCandidate = localPlayer.controller.collisionCandidate;
+            var animationCache = animator.animationCache.animations[animation.data.name]; // e.g. "elevetor"
+
         //  Resolving the octree elevator problem:
         //  You add a elevator plane with the same geometry uuid on every octree partition (floor). 
         //  You do not need to create animator or update every floor. The trick is every plane to
@@ -822,11 +767,68 @@ function octreeNodeHelper(node){
         //  and update the player controller collisionCandidate faces vectors (a, b, c) of this 
         //  geometry.meshID (but not to every partition); the clones meshes do not need update task.
 
+        //  Elevator doors handlers. ( EXPERIMENTAL )
+
+            var doorOpening = new Signal();
+            var doorClosing = new Signal();
+
+            doorOpening.add(function( door ){
+
+                var currentTime = animation.currentTime;
+            //  var collisionCandidate = localPlayer.controller.collisionCandidate;
+            //  var animationCache = animator.animationCache.animations[animation.data.name]; // "elevetor"
+
+                var prevKeyIndex = animationCache.prevKey.pos.index;
+                var nextKeyIndex = animationCache.nextKey.pos.index;
+                var prevKeyTime = animationCache.prevKey.pos.time;
+
+                var offset = (prevKeyTime - currentTime);
+
+            //  debugMode && console.log( "opening offset:", offset );
+                if ( door.position.x - offset < door.positionOpen ) {
+                //  Update collision faces in player controller.
+                    collisionCandidate.filter(door.filter)
+                    .forEach( function( item ){
+                        item.a.x -= offset;
+                        item.b.x -= offset; 
+                        item.c.x -= offset;
+                    });
+                    door.position.x -= offset; 
+                //  debugMode && console.log( "opening position-x:", door.position.x );
+                }
+            });
+
+            doorClosing.add(function( door ){
+
+                var currentTime = animation.currentTime;
+            //  var collisionCandidate = localPlayer.controller.collisionCandidate;
+            //  var animationCache = animator.animationCache.animations[animation.data.name]; // "elevetor"
+
+                var prevKeyIndex = animationCache.prevKey.pos.index;
+                var nextKeyIndex = animationCache.nextKey.pos.index;
+                var nextKeyTime = animationCache.nextKey.pos.time;
+
+                var offset = (nextKeyTime - currentTime); 
+
+            //  debugMode && console.log( "closing offset:", offset );
+                if ( door.position.x - offset > door.positionClose ) {
+                //  Update collision faces in player controller.
+                    collisionCandidate.filter(door.filter)
+                    .forEach( function( item ){
+                        item.a.x -= offset;
+                        item.b.x -= offset; 
+                        item.c.x -= offset;
+                    });
+                    door.position.x -= offset;
+                //  debugMode && console.log( "closing position-x:", door.position.x );
+                }
+            });
+
             elevatorUpdater.update = () => {
 
             //  Current floor.
                 elevatorUpdater.floor = elevator.floor = parseInt( animator.position.y / floorheight );
-
+        /*
             //  Elevator doors handler. ( EXPERIMENTAL )
                 var currentTime = animation.currentTime;
                 var collisionCandidate = localPlayer.controller.collisionCandidate;
@@ -834,7 +836,7 @@ function octreeNodeHelper(node){
                 var prevKeyIndex = animationCache.prevKey.pos.index;
                 var nextKeyIndex = animationCache.nextKey.pos.index;
             //  debugMode && console.log( animationCache.prevKey.pos.index, animationCache.nextKey.pos.index );
-
+        */
                 switch( prevKeyIndex, nextKeyIndex){
 
                 //  BASE FLOOR.
@@ -957,6 +959,7 @@ function octreeNodeHelper(node){
                         }   break;
 
                 }
+
         /*
                 function doorOpening( door ){
                     var prevKeyTime = animationCache.prevKey.pos.time;
@@ -992,6 +995,7 @@ function octreeNodeHelper(node){
                     }
                 }
         */
+
             //  Update elevator.
                 elevator.position.y = animator.position.y + elevatAdjust;
 
