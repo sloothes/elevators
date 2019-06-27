@@ -317,7 +317,7 @@ function octreeNodeHelper(node){
             await cache.put( elevatorCabineUrl, clone );
             return response.json();
 
-        .then( function( json ){
+        }).then( function( json ){
 
             return loadComponentAsset( json );
 
@@ -786,8 +786,8 @@ function octreeNodeHelper(node){
                 animation.timeScale = timescale;
             //  Activate updater.
                 $(elevatorSelector).addClass("update");
-            //  Update "$update" list to start updating.
-                $update = $(".update");   // IMPORTANT //
+            //  Update "$updates" list to start updating.
+                $updates = $(".update");   // IMPORTANT //
             };
 
             elevator.stop = () => {
@@ -796,7 +796,7 @@ function octreeNodeHelper(node){
             //  Disactivate updater.
                 $(elevatorSelector).removeClass("update");
             //  Update "$update" list to start updating.
-                $update = $(".update");   // IMPORTANT //
+                $updates = $(".update");   // IMPORTANT //
             };
 
         //  return mesh;
@@ -912,7 +912,7 @@ function octreeNodeHelper(node){
             await cache.put( elevatorFrameUrl, clone );
             return response.json();
 
-        .then( function( json ){
+        }).then( function( json ){
 
             return loadComponentAsset( json );
 
