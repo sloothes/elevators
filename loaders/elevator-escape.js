@@ -821,6 +821,7 @@ function octreeNodeHelper(node){
             //  Elevator doors handler.
                 var name = animation.data.name; // e.g. "elevetor"
                 var animationCache = animator.animationCache.animations[name];
+                var collisionCandidate = localPlayer.controller.collisionCandidate;
 
                 var currentTime  = animation.currentTime;
                 var prevKeyIndex = animationCache.prevKey.pos.index;
@@ -832,121 +833,118 @@ function octreeNodeHelper(node){
                 //  BASE FLOOR.
 
                     //  opening:
-                        case (54, 55): {
-                            if ( !!collisionCandidate.find(doorF00.filter) ) doorOpening.dispatch( doorF00 ); 
-                            if ( !!collisionCandidate.find(doorF01.filter) ) doorOpening.dispatch( doorF01 ); 
-                        }   break;
+                    case (54, 55):
+                        if ( !!collisionCandidate.find(doorF00.filter) ) doorOpening.dispatch( doorF00 ); 
+                        if ( !!collisionCandidate.find(doorF01.filter) ) doorOpening.dispatch( doorF01 ); 
+                    break;
 
                     //  closing:
-                        case (0, 1): {
-                            doorClosing.dispatch( doorF00 ); 
-                            doorClosing.dispatch( doorF01 ); 
-                        }   break;
+                    case (0, 1):
+                        doorClosing.dispatch( doorF00 ); 
+                        doorClosing.dispatch( doorF01 ); 
+                    break;
 
-
-                //  ASCENT // DESCENT.
+                        
+                //  ASCENT - DESCENT.
 
                     //  opening:
-                        case (2, 3): 
-                        case (50, 51): {
-                            if ( !!collisionCandidate.find(doorF10.filter) ) doorOpening.dispatch( doorF10 ); 
-                            if ( !!collisionCandidate.find(doorF11.filter) ) doorOpening.dispatch( doorF11 ); 
-                        }   break;
-
+                    case (2, 3): 
+                    case (50, 51):
+                        if ( !!collisionCandidate.find(doorF10.filter) ) doorOpening.dispatch( doorF10 ); 
+                        if ( !!collisionCandidate.find(doorF11.filter) ) doorOpening.dispatch( doorF11 ); 
+                    break;
 
                     //  closing:
-                        case (4, 5): 
-                        case (52, 53): {
-                            doorClosing.dispatch( doorF10 ); 
-                            doorClosing.dispatch( doorF11 ); 
-                        }   break;
+                    case (4, 5): 
+                    case (52, 53):
+                        doorClosing.dispatch( doorF10 ); 
+                        doorClosing.dispatch( doorF11 ); 
+                    break;
 
                     //  opening:
-                        case (6, 7): 
-                        case (46, 47): {
-                            if ( !!collisionCandidate.find(doorF20.filter) ) doorOpening.dispatch( doorF20 ); 
-                            if ( !!collisionCandidate.find(doorF21.filter) ) doorOpening.dispatch( doorF21 ); 
-                        }   break;
+                    case (6, 7): 
+                    case (46, 47):
+                        if ( !!collisionCandidate.find(doorF20.filter) ) doorOpening.dispatch( doorF20 ); 
+                        if ( !!collisionCandidate.find(doorF21.filter) ) doorOpening.dispatch( doorF21 ); 
+                    break;
 
                     //  closing:
-                        case (8, 9): 
-                        case (48, 49): {
-                            doorClosing.dispatch( doorF20 ); 
-                            doorClosing.dispatch( doorF21 );
-                        }   break;
+                    case (8, 9): 
+                    case (48, 49):
+                        doorClosing.dispatch( doorF20 ); 
+                        doorClosing.dispatch( doorF21 );
+                    break;
 
                     //  opening:
-                        case (10, 11):
-                        case (42, 43): {
-                            if ( !!collisionCandidate.find(doorF30.filter) ) doorOpening.dispatch( doorF30 ); 
-                            if ( !!collisionCandidate.find(doorF31.filter) ) doorOpening.dispatch( doorF31 ); 
-                        }   break;
+                    case (10, 11):
+                    case (42, 43):
+                        if ( !!collisionCandidate.find(doorF30.filter) ) doorOpening.dispatch( doorF30 ); 
+                        if ( !!collisionCandidate.find(doorF31.filter) ) doorOpening.dispatch( doorF31 ); 
+                    break;
 
                     //  closing:
-                        case (12, 13): 
-                        case (44, 45):{
-                            doorClosing.dispatch( doorF30 ); 
-                            doorClosing.dispatch( doorF31 );
-                        }   break;
+                    case (12, 13): 
+                    case (44, 45):
+                        doorClosing.dispatch( doorF30 ); 
+                        doorClosing.dispatch( doorF31 );
+                    break;
 
                     //  opening:
-                        case (38, 39):
-                        case (14, 15): {
-                            if ( !!collisionCandidate.find(doorF40.filter) ) doorOpening.dispatch( doorF40 ); 
-                            if ( !!collisionCandidate.find(doorF41.filter) ) doorOpening.dispatch( doorF41 ); 
-                        }   break;
+                    case (38, 39):
+                    case (14, 15):
+                        if ( !!collisionCandidate.find(doorF40.filter) ) doorOpening.dispatch( doorF40 ); 
+                        if ( !!collisionCandidate.find(doorF41.filter) ) doorOpening.dispatch( doorF41 ); 
+                    break;
 
                     //  closing:
-                        case (16, 17): 
-                        case (40, 41): {
-                            doorClosing.dispatch( doorF40 ); 
-                            doorClosing.dispatch( doorF41 );
-                        }   break;
+                    case (16, 17): 
+                    case (40, 41):
+                        doorClosing.dispatch( doorF40 ); 
+                        doorClosing.dispatch( doorF41 );
+                    break;
 
                     //  opening:
-                        case (18, 19):
-                        case (34, 35): {
-                            if ( !!collisionCandidate.find(doorF50.filter) ) doorOpening.dispatch( doorF50 ); 
-                            if ( !!collisionCandidate.find(doorF51.filter) ) doorOpening.dispatch( doorF51 ); 
-                        }   break;
+                    case (18, 19):
+                    case (34, 35):
+                        if ( !!collisionCandidate.find(doorF50.filter) ) doorOpening.dispatch( doorF50 ); 
+                        if ( !!collisionCandidate.find(doorF51.filter) ) doorOpening.dispatch( doorF51 ); 
+                    break;
 
                     //  closing:
-                        case (20, 21): 
-                        case (36, 37): {
-                            doorClosing.dispatch( doorF50 ); 
-                            doorClosing.dispatch( doorF51 );
-                        }   break;
+                    case (20, 21): 
+                    case (36, 37):
+                        doorClosing.dispatch( doorF50 ); 
+                        doorClosing.dispatch( doorF51 );
+                    break;
 
                     //  opening:
-                        case (22, 23):
-                        case (30, 31): {
-                            if ( !!collisionCandidate.find(doorF60.filter) ) doorOpening.dispatch( doorF60 ); 
-                            if ( !!collisionCandidate.find(doorF61.filter) ) doorOpening.dispatch( doorF61 ); 
-                        }   break;
+                    case (22, 23):
+                    case (30, 31):
+                        if ( !!collisionCandidate.find(doorF60.filter) ) doorOpening.dispatch( doorF60 ); 
+                        if ( !!collisionCandidate.find(doorF61.filter) ) doorOpening.dispatch( doorF61 ); 
+                    break;
 
                     //  closing:
-
-                        case (24, 25): 
-                        case (32, 33):{
-                            doorClosing.dispatch( doorF60 ); 
-                            doorClosing.dispatch( doorF61 );
-                        }   break;
+                    case (24, 25): 
+                    case (32, 33):
+                        doorClosing.dispatch( doorF60 ); 
+                        doorClosing.dispatch( doorF61 );
+                    break;
 
 
                 //  LAST FLOOR.
 
                     //  opening:
-                        case (26, 27): {
-                            if ( !!collisionCandidate.find(doorF70.filter) ) doorOpening.dispatch( doorF70 ); 
-                            if ( !!collisionCandidate.find(doorF71.filter) ) doorOpening.dispatch( doorF71 ); 
-                        }   break;
-
+                    case (26, 27): 
+                        if ( !!collisionCandidate.find(doorF70.filter) ) doorOpening.dispatch( doorF70 ); 
+                        if ( !!collisionCandidate.find(doorF71.filter) ) doorOpening.dispatch( doorF71 ); 
+                    break;
 
                     //  closing:
-                        case (28, 29): {
-                            doorClosing.dispatch( doorF70 ); 
-                            doorClosing.dispatch( doorF71 );
-                        }   break;
+                    case (28, 29): 
+                        doorClosing.dispatch( doorF70 ); 
+                        doorClosing.dispatch( doorF71 );
+                    break;
 
                 }
 
