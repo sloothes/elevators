@@ -20,15 +20,6 @@ var octreeEdgesHelpers = [];
 var matcapsFolder = "/matcaps/";
 var elevatorsGeometryFolder = "/elevator/geometries/";
 
-var staircasesUrl     = elevatorsGeometryFolder + "staircase-outdoor.js";    //  materials: [4].
-var stairoctreeUrl    = elevatorsGeometryFolder + "staircase-octree.js";
-var onestoctreeUrl    = elevatorsGeometryFolder + "one-stair-octree-v1.js";
-var elevatorCabineUrl = elevatorsGeometryFolder + "elevator-cabin.js";       //  materials: [6].
-var elevatorFrameUrl  = elevatorsGeometryFolder + "elevator-doorframe.js";   //  materials: [6].
-var railingPipeUrl    = elevatorsGeometryFolder + "railing-pipe.js";
-var woodenRailingUrl  = elevatorsGeometryFolder + "wooden-railing.js";
-var apartDoorLeafUrl  = elevatorsGeometryFolder + "apartment-doorleaf.js";  //  materials: [4].
-var apartDoorFrameUrl = elevatorsGeometryFolder + "apartment-doorframe.js"; //  materials: [2].
 
 localPlayer.controller.maxSlopeGradient = 0.001; // Math.cos(THREE.Math.degToRad(89));
 
@@ -140,6 +131,22 @@ function octreeNodeHelper(node){
 
 
 (async function(){
+
+    var staircasesUrl     = elevatorsGeometryFolder + "staircase-outdoor.js";    //  materials: [4].
+    var stairoctreeUrl    = elevatorsGeometryFolder + "staircase-octree.js";
+    var onestoctreeUrl    = elevatorsGeometryFolder + "one-stair-octree-v1.js";
+    var elevatorCabineUrl = elevatorsGeometryFolder + "elevator-cabin.js";       //  materials: [6].
+    var elevatorFrameUrl  = elevatorsGeometryFolder + "elevator-doorframe.js";   //  materials: [6].
+    var railingPipeUrl    = elevatorsGeometryFolder + "railing-pipe.js";
+    var woodenRailingUrl  = elevatorsGeometryFolder + "wooden-railing.js";
+    var apartDoorLeafUrl  = elevatorsGeometryFolder + "apartment-doorleaf.js";  //  materials: [4].
+    var apartDoorFrameUrl = elevatorsGeometryFolder + "apartment-doorframe.js"; //  materials: [2].
+
+//  Build elevator.
+    buildElevator( new THREE.Vector3( 250,0,0), 0, "elevatorR", 0.5, 0.75, false ),
+    buildElevator( new THREE.Vector3(-250,0,0), 0, "elevatorL", 0.75, 0.25, false ),
+
+
 
     async function buildElevator( position, rotation, selector, timescale, startfactor, wireframe ){
 
@@ -324,54 +331,176 @@ function octreeNodeHelper(node){
         }).then( function( mesh ){
             mesh.name = "elevator cabine";
 
-            var img = new Image();
-            img.crossOrigin = "anonymous";
-            $(img).on("load", matcapMaterial);
-            img.src = matcapsFolder + "ChromeReflect.jpg";
-            function matcapMaterial(){
-                var normal = new THREE.Texture( normalPixel() );
-                var matcap = new THREE.Texture( img );
-                mesh.material.materials[0] = new ShaderMaterial( normal, matcap );
-                debugMode && console.log( "materials:", mesh.material.materials );
-                $(this).remove();
-            }
-            return mesh;
-        }).then( function( mesh ){
-            var img = new Image();
-            img.crossOrigin = "anonymous";
-            $(img).on("load", matcapMaterial);
-            img.src = matcapsFolder + "silver_tinman.png";
-            function matcapMaterial(){
-                var normal = new THREE.Texture( normalPixel() );
-                var matcap = new THREE.Texture( img );
-                mesh.material.materials[3] = new ShaderMaterial( normal, matcap );
-                mesh.material.materials[5] = new ShaderMaterial( normal, matcap );
-                debugMode && console.log( "materials:", mesh.material.materials );
-                $(this).remove();
-            }
-            return mesh;
-        }).then( function( mesh ){
-            var img = new Image();
-            img.crossOrigin = "anonymous";
-            $(img).on("load", standardMaterial);
-            img.src = elevatorsGeometryFolder + "elevator.jpg";
-            function standardMaterial(){
-                var texture = new THREE.Texture( img );
-                mesh.material.materials[1] = new THREE.MeshStandardMaterial({ 
-                    color: 0xffffff, 
-                    map: texture,
-                    bumpMap: texture,
-                    bumpScale: -0.03,
-                    shading: THREE.SmoothShading,
+            var url = matcapsFolder + "ChromeReflect.jpg";
+            caches.match( url ).then(function(response){
+
+                if ( !response ) 
+                    throw response;
+                else
+                    return response;
+
+            }).catch(function(err){
+
+            //  We use cors origin mode to avoid
+            //  texture tainted canvases, images.
+                return fetch( url, {
+                    mode: "cors",
+                    method: "GET",
                 });
-                mesh.material.materials[1].map.needsUpdate = true;
-                mesh.material.materials[1].bumpMap.needsUpdate = true;
-                debugMode && console.log( "materials:", mesh.material.materials );
-                $(this).remove();
-            }
+
+            }).then(async function(response){
+
+                var cache = await caches.open("textures")
+                    .then(function(cache){ return cache; });
+
+            //  Clone is needed because put() consumes the response body.
+            //  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
+
+                var clone = response.clone();
+                await cache.put( url, clone );
+                return response.blob();
+
+            }).then(function(blob){
+
+                var img = new Image();
+                img.crossOrigin = "anonymous";
+
+                $(img).on("load", function(){
+                    matcapMaterial(mesh, img, 0);
+                });
+
+            //  Get dataURL from blob.
+
+                var reader = new FileReader();
+                reader.onload = function() {
+                    img.src = reader.result;
+                };
+
+                reader.readAsDataURL(blob);
+
+            });
+
             return mesh;
 
         }).then( function( mesh ){
+
+            var url = matcapsFolder + "silver_tinman.png";
+            caches.match( url ).then(function(response){
+
+                if ( !response ) 
+                    throw response;
+                else
+                    return response;
+
+            }).catch(function(err){
+
+            //  We use cors origin mode to avoid
+            //  texture tainted canvases, images.
+                return fetch( url, {
+                    mode: "cors",
+                    method: "GET",
+                });
+
+            }).then(async function(response){
+
+                var cache = await caches.open("textures")
+                    .then(function(cache){ return cache; });
+
+            //  Clone is needed because put() consumes the response body.
+            //  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
+
+                var clone = response.clone();
+                await cache.put( url, clone );
+                return response.blob();
+
+            }).then(function(blob){
+
+                var img = new Image();
+                img.crossOrigin = "anonymous";
+
+                $(img).on("load", function(){
+                    matcapMaterial(mesh, img, 3);
+                    matcapMaterial(mesh, img, 5);
+                });
+
+            //  Get dataURL from blob.
+
+                var reader = new FileReader();
+                reader.onload = function() {
+                    img.src = reader.result;
+                };
+
+                reader.readAsDataURL(blob);
+
+            });
+
+            return mesh;
+
+        }).then( function( mesh ){
+
+            var url = elevatorsGeometryFolder + "elevator.jpg";
+            caches.match( url ).then(function(response){
+
+                if ( !response ) 
+                    throw response;
+                else
+                    return response;
+
+            }).catch(function(err){
+
+            //  We use cors origin mode to avoid
+            //  texture tainted canvases, images.
+                return fetch( url, {
+                    mode: "cors",
+                    method: "GET",
+                });
+
+            }).then(async function(response){
+
+                var cache = await caches.open("textures")
+                    .then(function(cache){ return cache; });
+
+            //  Clone is needed because put() consumes the response body.
+            //  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
+
+                var clone = response.clone();
+                await cache.put( url, clone );
+                return response.blob();
+
+            }).then(function(blob){
+
+                var img = new Image();
+                img.crossOrigin = "anonymous";
+
+                $(img).on("load", function(){
+                    var canvas = makePowerOfTwo( img, true );
+                    var texture = new THREE.Texture( canvas );
+                    mesh.material.materials[1] = new THREE.MeshStandardMaterial({ 
+                        color: 0xffffff, 
+                        map: texture,
+                        bumpMap: texture,
+                        bumpScale: -0.03,
+                        shading: THREE.SmoothShading,
+                    });
+                    mesh.material.materials[1].map.needsUpdate = true;
+                    mesh.material.materials[1].bumpMap.needsUpdate = true;
+                    $(img).remove();
+                });
+
+            //  Get dataURL from blob.
+
+                var reader = new FileReader();
+                reader.onload = function() {
+                    img.src = reader.result;
+                };
+
+                reader.readAsDataURL(blob);
+
+            });
+
+            return mesh;
+
+        }).then( async function( mesh ){
 
         //  Elevator doors.
 
@@ -384,6 +513,66 @@ function octreeNodeHelper(node){
                     return item.meshID == door.geometry.uuid;
                 };
             };
+
+        //  Elevator door material.
+
+            var url = matcapsFolder + "ChromeReflect.jpg";
+            var elevatorDoorMaterial = await caches.match(url).then(function(response){
+
+                if ( !response ) 
+                    throw response;
+                else
+                    return response;
+
+            }).catch(function(err){
+
+            //  We use cors origin mode to avoid
+            //  texture tainted canvases, images.
+                return fetch( url, {
+                    mode: "cors",
+                    method: "GET",
+                });
+
+            }).then(async function(response){
+
+                var cache = await caches.open("textures")
+                    .then(function(cache){ return cache; });
+
+            //  Clone is needed because put() consumes the response body.
+            //  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
+
+                var clone = response.clone();
+                await cache.put( url, clone );
+                return response.blob();
+
+            }).then(function(blob){
+
+                return new Promise(function(resolve, reject){
+
+                    var img = new Image();
+                    img.crossOrigin = "anonymous";
+
+                    $(img).on("load", function(){
+                        var normal = new THREE.Texture( normalPixel() );
+                        var canvas = makePowerOfTwo( img, true );
+                        var matcap = new THREE.Texture( canvas );
+                        var material = ShaderMaterial( normal, matcap );
+                        resolve( material );
+                        $(img).remove();
+                    });
+
+                //  Get dataURL from blob.
+
+                    var reader = new FileReader();
+                    reader.onload = function() {
+                        img.src = reader.result;
+                    };
+
+                    reader.readAsDataURL(blob);
+
+                });
+
+            });
 
         //  Elevator door F0 (F00/F01).
 
@@ -441,6 +630,7 @@ function octreeNodeHelper(node){
                 return door;
             }
 
+/*
             function elevatorDoorMaterial(){
                 var img = new Image();
                 img.crossOrigin = "anonymous";
@@ -455,7 +645,7 @@ function octreeNodeHelper(node){
                     return material;
                 }
             }
-
+*/
 
         //  Elevator.
 
@@ -811,6 +1001,39 @@ function octreeNodeHelper(node){
         var backWall = elevatorBackWall();
         var sideWalls = elevatorSideWall();
 
+        function elevatorBackWall(){
+            var octreeMeshHelpers = [];
+            var w = 40, h = roofheight, d = 15;
+            var geometry = new THREE.BoxGeometry(w, h, d, 1,1,1 );
+            var mesh = new THREE.Mesh(geometry, material);
+            mesh.name = "elevator back wall";
+            octreeGeometries["elevator_back_wall"] = mesh.geometry.uuid;
+
+            var mesh = mesh.clone();
+            mesh.position.set( x, y+(h/2), z+(d/2)  ); // ok.
+            octree.importThreeMesh( mesh );
+            octreeMeshHelpers.push( mesh );
+            var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+            if ( wireframe ) {
+                scene.add( mesh );   // optional.
+                scene.add( helper ); // optional.
+            }
+
+        //  Remove octree mesh helpers.
+            setTimeout( () => {
+                if ( !wireframe ) return;
+                octreeMeshHelpers.forEach( function( item, i ){
+                    scene.remove( octreeMeshHelpers[i] );
+                    var geometry = octreeMeshHelpers[i].geometry;
+                    geometry.dispose();
+                    octreeMeshHelpers[i] = null;
+                });
+                console.log( "Octree mesh helpers has been removed:", octreeMeshHelpers.filter(Boolean) );
+            }, 100);
+
+            return mesh;
+        }
+
         function elevatorSideWall(){
             var octreeMeshHelpers = [];
             var w = 10, h = roofheight, d = 40;
@@ -854,38 +1077,6 @@ function octreeNodeHelper(node){
             return mesh;
         }
 
-        function elevatorBackWall(){
-            var octreeMeshHelpers = [];
-            var w = 40, h = roofheight, d = 15;
-            var geometry = new THREE.BoxGeometry(w, h, d, 1,1,1 );
-            var mesh = new THREE.Mesh(geometry, material);
-            mesh.name = "elevator back wall";
-            octreeGeometries["elevator_back_wall"] = mesh.geometry.uuid;
-
-            var mesh = mesh.clone();
-            mesh.position.set( x, y+(h/2), z+(d/2)  ); // ok.
-            octree.importThreeMesh( mesh );
-            octreeMeshHelpers.push( mesh );
-            var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
-            if ( wireframe ) {
-                scene.add( mesh );   // optional.
-                scene.add( helper ); // optional.
-            }
-
-        //  Remove octree mesh helpers.
-            setTimeout( () => {
-                if ( !wireframe ) return;
-                octreeMeshHelpers.forEach( function( item, i ){
-                    scene.remove( octreeMeshHelpers[i] );
-                    var geometry = octreeMeshHelpers[i].geometry;
-                    geometry.dispose();
-                    octreeMeshHelpers[i] = null;
-                });
-                console.log( "Octree mesh helpers has been removed:", octreeMeshHelpers.filter(Boolean) );
-            }, 100);
-
-            return mesh;
-        }
 
     //  Elevator frames.
 
@@ -977,6 +1168,14 @@ function octreeNodeHelper(node){
         var mesh = new THREE.Mesh(geometry, material);
 
         return mesh;
+    }
+
+    function matcapMaterial(mesh, img, index){
+        var normal = new THREE.Texture( normalPixel() );
+        var canvas = makePowerOfTwo( img, true );
+        var matcap = new THREE.Texture( canvas );
+        mesh.material.materials[index] = ShaderMaterial( normal, matcap );
+        $(img).remove();
     }
 
 })();
