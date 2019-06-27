@@ -773,7 +773,7 @@ function octreeNodeHelper(node){
 
                 var name = animation.data.name; // e.g. "elevetor"
                 var currentTime = animation.currentTime;
-                var nextKeyTime = animator.animationCache.animations[name].nextKey.pos.time;
+                var prevKeyTime = animator.animationCache.animations[name].prevKey.pos.time;
 
                 var offset = (prevKeyTime - currentTime);
 
