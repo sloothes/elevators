@@ -1,4 +1,4 @@
-//  elevators-build.js (v2.4)
+//  elevator-escape.js (v2.4)
 
     var railMode     = true;
     var hallMode     = true;
