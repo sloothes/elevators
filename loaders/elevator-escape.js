@@ -1190,12 +1190,16 @@ function octreeNodeHelper(node){
                 $(img).on("load", function(){
                     var canvas = makePowerOfTwo( img, true );
                     var texture = new THREE.Texture( canvas );
-                    mesh.material.materials[2] = new THREE.MeshStandardMaterial({ 
+                    var material = new THREE.MeshStandardMaterial({ 
+                        color: 0x000000,
                         emissive: 0xffffff, 
                         emissiveMap: texture,
                         shading: THREE.SmoothShading,
                     });
+                    mesh.material.materials[2] = material;
+                    mesh.material.materials[3] = material;
                     mesh.material.materials[2].emissiveMap.needsUpdate = true;
+                    mesh.material.materials[3].emissiveMap.needsUpdate = true;
                     $(img).remove();
                 });
 
@@ -1215,7 +1219,6 @@ function octreeNodeHelper(node){
         }).then( function( mesh ){
 
             mesh.name = "elevator frame";
-
             mesh.rotation.y = THREE.Math.degToRad( 90 );
             mesh.position.set( 0, 0, 41.5);
             component.add( mesh );
