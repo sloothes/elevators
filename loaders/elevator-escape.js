@@ -721,7 +721,11 @@ function octreeNodeHelper(node){
                 };
 
             //  Activate mirror jqurery renderer.
-                if ( mirrorMode ) $(mirrorsRendererSelector).addClass("render");  // IMPORTANT //
+                if ( mirrorMode ) {
+                    $(mirrorsRendererSelector).addClass("render");
+                //  Update "renders" list to start rendering.
+                    $renders = $(".render");
+                }
             }
 
 
