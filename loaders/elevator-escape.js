@@ -8,7 +8,7 @@ var wireMode     = false;
 var stairMode    = true;
 var octreeMode   = false;
 var cabineMode   = true;
-var mirrorMode   = true;
+var mirrorMode   = false;
 var elevatorMode = true;
 
 var ElevatorAssets = {};
