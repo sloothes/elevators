@@ -142,11 +142,53 @@ function octreeNodeHelper(node){
     var apartDoorLeafUrl  = elevatorsGeometryFolder + "apartment-doorleaf.js";  //  materials: [4].
     var apartDoorFrameUrl = elevatorsGeometryFolder + "apartment-doorframe.js"; //  materials: [2].
 
+    var Signal = signals.Signal;
+    var doorOpening = new Signal();
+    var doorClosing = new Signal();
+
+    doorOpening.add(function( door ){
+        var prevKeyTime = animationCache.prevKey.pos.time;
+        var offset = (prevKeyTime - currentTime);
+    //  debugMode && console.log( "opening offset:", offset );
+        if ( door.position.x - offset < door.positionOpen ) {
+        //  Update collision faces in player controller.
+            collisionCandidate.filter(door.filter)
+            .forEach( function( item ){
+                item.a.x -= offset;
+                item.b.x -= offset; 
+                item.c.x -= offset;
+            });
+            door.position.x -= offset; 
+        //  debugMode && console.log( "opening position-x:", door.position.x );
+        }
+    });
+
+    doorClosing.add(function( door ){
+        var nextKeyTime = animationCache.nextKey.pos.time;
+        var offset = (nextKeyTime - currentTime); 
+    //  debugMode && console.log( "closing offset:", offset );
+        if ( door.position.x - offset > door.positionClose ) {
+        //  Update collision faces in player controller.
+            collisionCandidate.filter(door.filter)
+            .forEach( function( item ){
+                item.a.x -= offset;
+                item.b.x -= offset; 
+                item.c.x -= offset;
+            });
+            door.position.x -= offset;
+        //  debugMode && console.log( "closing position-x:", door.position.x );
+        }
+    }
+
+
+
+
+
+
+
 //  Build elevator.
     buildElevator( new THREE.Vector3( 250,0,0), 0, "elevatorR", 0.5, 0.75, false ),
     buildElevator( new THREE.Vector3(-250,0,0), 0, "elevatorL", 0.75, 0.25, false ),
-
-
 
     async function buildElevator( position, rotation, selector, timescale, startfactor, wireframe ){
 
@@ -797,14 +839,14 @@ function octreeNodeHelper(node){
 
                     //  opening:
                         case (54, 55): {
-                            if ( !!collisionCandidate.find(doorF00.filter) ) doorOpening( doorF00 ); 
-                            if ( !!collisionCandidate.find(doorF01.filter) ) doorOpening( doorF01 ); 
+                            if ( !!collisionCandidate.find(doorF00.filter) ) doorOpening.dispatch( doorF00 ); 
+                            if ( !!collisionCandidate.find(doorF01.filter) ) doorOpening.dispatch( doorF01 ); 
                         }   break;
 
                     //  closing:
                         case (0, 1): {
-                            doorClosing( doorF00 ); 
-                            doorClosing( doorF01 ); 
+                            doorClosing.dispatch( doorF00 ); 
+                            doorClosing.dispatch( doorF01 ); 
                         }   break;
 
 
@@ -813,87 +855,87 @@ function octreeNodeHelper(node){
                     //  opening:
                         case (2, 3): 
                         case (50, 51): {
-                            if ( !!collisionCandidate.find(doorF10.filter) ) doorOpening( doorF10 ); 
-                            if ( !!collisionCandidate.find(doorF11.filter) ) doorOpening( doorF11 ); 
+                            if ( !!collisionCandidate.find(doorF10.filter) ) doorOpening.dispatch( doorF10 ); 
+                            if ( !!collisionCandidate.find(doorF11.filter) ) doorOpening.dispatch( doorF11 ); 
                         }   break;
 
 
                     //  closing:
                         case (4, 5): 
                         case (52, 53): {
-                            doorClosing( doorF10 ); 
-                            doorClosing( doorF11 ); 
+                            doorClosing.dispatch( doorF10 ); 
+                            doorClosing.dispatch( doorF11 ); 
                         }   break;
 
                     //  opening:
                         case (6, 7): 
                         case (46, 47): {
-                            if ( !!collisionCandidate.find(doorF20.filter) ) doorOpening( doorF20 ); 
-                            if ( !!collisionCandidate.find(doorF21.filter) ) doorOpening( doorF21 ); 
+                            if ( !!collisionCandidate.find(doorF20.filter) ) doorOpening.dispatch( doorF20 ); 
+                            if ( !!collisionCandidate.find(doorF21.filter) ) doorOpening.dispatch( doorF21 ); 
                         }   break;
 
                     //  closing:
                         case (8, 9): 
                         case (48, 49): {
-                            doorClosing( doorF20 ); 
-                            doorClosing( doorF21 );
+                            doorClosing.dispatch( doorF20 ); 
+                            doorClosing.dispatch( doorF21 );
                         }   break;
 
                     //  opening:
                         case (10, 11):
                         case (42, 43): {
-                            if ( !!collisionCandidate.find(doorF30.filter) ) doorOpening( doorF30 ); 
-                            if ( !!collisionCandidate.find(doorF31.filter) ) doorOpening( doorF31 ); 
+                            if ( !!collisionCandidate.find(doorF30.filter) ) doorOpening.dispatch( doorF30 ); 
+                            if ( !!collisionCandidate.find(doorF31.filter) ) doorOpening.dispatch( doorF31 ); 
                         }   break;
 
                     //  closing:
                         case (12, 13): 
                         case (44, 45):{
-                            doorClosing( doorF30 ); 
-                            doorClosing( doorF31 );
+                            doorClosing.dispatch( doorF30 ); 
+                            doorClosing.dispatch( doorF31 );
                         }   break;
 
                     //  opening:
                         case (38, 39):
                         case (14, 15): {
-                            if ( !!collisionCandidate.find(doorF40.filter) ) doorOpening( doorF40 ); 
-                            if ( !!collisionCandidate.find(doorF41.filter) ) doorOpening( doorF41 ); 
+                            if ( !!collisionCandidate.find(doorF40.filter) ) doorOpening.dispatch( doorF40 ); 
+                            if ( !!collisionCandidate.find(doorF41.filter) ) doorOpening.dispatch( doorF41 ); 
                         }   break;
 
                     //  closing:
                         case (16, 17): 
                         case (40, 41): {
-                            doorClosing( doorF40 ); 
-                            doorClosing( doorF41 );
+                            doorClosing.dispatch( doorF40 ); 
+                            doorClosing.dispatch( doorF41 );
                         }   break;
 
                     //  opening:
                         case (18, 19):
                         case (34, 35): {
-                            if ( !!collisionCandidate.find(doorF50.filter) ) doorOpening( doorF50 ); 
-                            if ( !!collisionCandidate.find(doorF51.filter) ) doorOpening( doorF51 ); 
+                            if ( !!collisionCandidate.find(doorF50.filter) ) doorOpening.dispatch( doorF50 ); 
+                            if ( !!collisionCandidate.find(doorF51.filter) ) doorOpening.dispatch( doorF51 ); 
                         }   break;
 
                     //  closing:
                         case (20, 21): 
                         case (36, 37): {
-                            doorClosing( doorF50 ); 
-                            doorClosing( doorF51 );
+                            doorClosing.dispatch( doorF50 ); 
+                            doorClosing.dispatch( doorF51 );
                         }   break;
 
                     //  opening:
                         case (22, 23):
                         case (30, 31): {
-                            if ( !!collisionCandidate.find(doorF60.filter) ) doorOpening( doorF60 ); 
-                            if ( !!collisionCandidate.find(doorF61.filter) ) doorOpening( doorF61 ); 
+                            if ( !!collisionCandidate.find(doorF60.filter) ) doorOpening.dispatch( doorF60 ); 
+                            if ( !!collisionCandidate.find(doorF61.filter) ) doorOpening.dispatch( doorF61 ); 
                         }   break;
 
                     //  closing:
 
                         case (24, 25): 
                         case (32, 33):{
-                            doorClosing( doorF60 ); 
-                            doorClosing( doorF61 );
+                            doorClosing.dispatch( doorF60 ); 
+                            doorClosing.dispatch( doorF61 );
                         }   break;
 
 
@@ -901,19 +943,19 @@ function octreeNodeHelper(node){
 
                     //  opening:
                         case (26, 27): {
-                            if ( !!collisionCandidate.find(doorF70.filter) ) doorOpening( doorF70 ); 
-                            if ( !!collisionCandidate.find(doorF71.filter) ) doorOpening( doorF71 ); 
+                            if ( !!collisionCandidate.find(doorF70.filter) ) doorOpening.dispatch( doorF70 ); 
+                            if ( !!collisionCandidate.find(doorF71.filter) ) doorOpening.dispatch( doorF71 ); 
                         }   break;
 
 
                     //  closing:
                         case (28, 29): {
-                            doorClosing( doorF70 ); 
-                            doorClosing( doorF71 );
+                            doorClosing.dispatch( doorF70 ); 
+                            doorClosing.dispatch( doorF71 );
                         }   break;
 
                 }
-
+        /*
                 function doorOpening( door ){
                     var prevKeyTime = animationCache.prevKey.pos.time;
                     var offset = (prevKeyTime - currentTime);
@@ -947,7 +989,7 @@ function octreeNodeHelper(node){
                     //  debugMode && console.log( "closing position-x:", door.position.x );
                     }
                 }
-
+        */
             //  Update elevator.
                 elevator.position.y = animator.position.y + elevatAdjust;
 
