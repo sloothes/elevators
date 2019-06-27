@@ -147,6 +147,11 @@ function octreeNodeHelper(node){
 //  Build elevator.
     await buildElevator( new THREE.Vector3( 250,0,0), 0, "elevatorR", 0.5, 0.75, false );
     await buildElevator( new THREE.Vector3(-250,0,0), 0, "elevatorL", 0.75, 0.25, false );
+/*
+//  Build stairtowers.
+    buildStairtower( new THREE.Vector3(370,0,0), 0, false ),
+    buildStairtowerMirror( new THREE.Vector3(-310,0,0), 0, false ),
+*/
 
     async function buildElevator( position, rotation, selector, timescale, startfactor, wireframe ){
 
@@ -216,7 +221,7 @@ function octreeNodeHelper(node){
         }
 
         elevatorData.length = key.time;
-        debugMode && console.log({"ascent elevatorData": elevatorData});
+    //  debugMode && console.log({"ascent elevatorData": elevatorData});
 
 
     //  Descent.
@@ -242,7 +247,7 @@ function octreeNodeHelper(node){
         }
 
         elevatorData.length = key.time;
-        debugMode && console.log({"descent elevatorData": elevatorData});
+    //  debugMode && console.log({"descent elevatorData": elevatorData});
 
 
         if ( true ) {
@@ -580,10 +585,10 @@ function octreeNodeHelper(node){
             var doorF01 = new THREE.Mesh( geometry2.clone(), elevatorDoorMaterial );
             doorF00.position.set( x-9, y+22.5, z+41.5);  doorF00.name = "elevator door F00"; 
             doorF01.position.set( x+9, y+22.5, z+41.5);  doorF01.name = "elevator door F01";
-            doorF00.positionClose = parseFloat(doorF00.position.x);          debugMode && console.log({"door F00 positionClose": doorF00.positionClose});
-            doorF01.positionClose = parseFloat(doorF01.position.x);          debugMode && console.log({"door F01 positionClose": doorF01.positionClose});
-            doorF00.positionOpen  = parseFloat(doorF01.positionClose + 9);   debugMode && console.log({"door F00 positionOpen" : doorF00.positionOpen });
-            doorF01.positionOpen  = parseFloat(doorF01.positionClose + 10);  debugMode && console.log({"door F01 positionOpen" : doorF01.positionOpen });
+            doorF00.positionClose = parseFloat(doorF00.position.x);          //  debugMode && console.log({"door F00 positionClose": doorF00.positionClose});
+            doorF01.positionClose = parseFloat(doorF01.position.x);          //  debugMode && console.log({"door F01 positionClose": doorF01.positionClose});
+            doorF00.positionOpen  = parseFloat(doorF01.positionClose + 9);   //  debugMode && console.log({"door F00 positionOpen" : doorF00.positionOpen });
+            doorF01.positionOpen  = parseFloat(doorF01.positionClose + 10);  //  debugMode && console.log({"door F01 positionOpen" : doorF01.positionOpen });
             doorF00.filter = filter( doorF00 ); 
             doorF01.filter = filter( doorF01 );
             if ( rigidMode ) cameraControls.rigidObjects.push( doorF00 );
@@ -594,8 +599,8 @@ function octreeNodeHelper(node){
 
         //  Elevator doors generator.
 
-            var opendoor  = doorF00.positionOpen;  debugMode && console.log({"door F00 positionOpen": doorF00.positionOpen});
-            var opendoor1 = doorF01.positionOpen;  debugMode && console.log({"door F01 positionOpen": doorF01.positionOpen});
+            var opendoor  = doorF00.positionOpen;  //  debugMode && console.log({"door F00 positionOpen": doorF00.positionOpen});
+            var opendoor1 = doorF01.positionOpen;  //  debugMode && console.log({"door F01 positionOpen": doorF01.positionOpen});
 
             var doorF10 = cloneElevatorDoor( geometry1, floorheight, "F10", doorF00, opendoor );
             var doorF20 = cloneElevatorDoor( geometry1, floorheight, "F20", doorF10, opendoor );
@@ -737,7 +742,7 @@ function octreeNodeHelper(node){
 
         //  Create elevator animation.
             var animation = new THREE.Animation( animator, elevatorData );
-            debugMode && console.log({"animation": animation});
+        //  debugMode && console.log({"animation": animation});
 
         //  Start animation.
             if ( !timescale ) var timescale = 0.5;
