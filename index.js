@@ -116,8 +116,8 @@
 
 //  Settings.
 
-    groundHelper.visible = true;
-    axisCustomHelper.visible = true;
-    axisOriginHelper.visible = true;
+    groundHelper.visible = false;
+    axisCustomHelper.visible = false;
+    axisOriginHelper.visible = false;
 
 })();
