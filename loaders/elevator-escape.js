@@ -993,9 +993,9 @@ function octreeNodeHelper(node){
                 $updates = $(".update");
             };
 
-        //  return mesh;
-
         }).then( function(){
+        //  Update "$updates" list to start animation.
+            $updates = $(".update");
         //  Update "$renders" list to start rendering.
             if ( mirrorMode ) $renders = $(".render");
         });
