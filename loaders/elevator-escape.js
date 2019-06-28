@@ -2692,12 +2692,322 @@ function octreeNodeHelper(node){
 
     }
 
+//  Build apartment doors.
+    buildApartmentDoors( new THREE.Vector3( 160, 0, 52 ), 0 ),
+
+    function buildApartmentDoors( position, rotation, timescale ){
+
+        if ( !rotation ) rotation = 0;
+        if ( !position ) position = new THREE.Vector3(0,0,0);
+
+        var x = position.x;  if ( isNaN(x) ) x = 0;
+        var y = position.y;  if ( isNaN(y) ) y = 0;
+        var z = position.z;  if ( isNaN(z) ) z = 0;
+        var rotation = THREE.Math.degToRad( rotation );
+
+    //  Door.
+
+        var material = new THREE.MeshBasicMaterial({visible:true});
+        var standardMaterial = new THREE.MeshStandardMaterial();
+
+        var w = 17, h = 39, d = 2;
+        var geometry = new THREE.BoxGeometry(w, h, d, 1,1,1);
+        var mesh = new THREE.Mesh(geometry, standardMaterial);
+
+        mesh.name = "apartment door";
+
+    //  Modify geometry center position.
+        mesh.geometry.vertices.forEach( function( item, i ){
+            mesh.geometry.vertices[i].x -= mesh.geometry.parameters.width/2;
+            mesh.geometry.vertices[i].y += mesh.geometry.parameters.height/2;
+            mesh.geometry.vertices[i].z -= mesh.geometry.parameters.depth/2;
+        });
+
+        mesh.geometry.verticesNeedUpdate = true; // important!
+
+    //  Door animation.
+
+        var key = {
+            "time":0.0, 
+            "pos":[0,0,0],
+            "rot":[0,0,0], 
+            "scl":[1,1,1]
+        };
+    
+        var data = {
+            "name"      : "door",
+            "fps"       : 25,
+            "length"    : 0,
+            "hierarchy" : [{
+                "parent" : -1,  //  root.
+                "keys":[]
+            }]
+        };
+
+        if ( !timescale || isNaN(timescale) ) timescale = 1;
+
+    //  Basic animation rotation: Use the animation.currentTime to rotate a mesh, // IMPORTANT //
+    //  and animation.timeScale to handle duration. (because key.rot does not work for non-skinning meshes.)
+        data.length = THREE.Math.degToRad( 80 ); // VERY IMPORTANT //
+        data.hierarchy[0].keys.push( { "time":THREE.Math.degToRad( -10 ), "pos":key.pos, "rot":key.rot, "scl":key.scl } );
+        data.hierarchy[0].keys.push( { "time":data.length, "pos":key.pos, "rot":key.rot, "scl":key.scl } );
+        debugMode && console.log({"door data.hierarchy": data.hierarchy});
+
+        var animator = new THREE.Object3D();
+        var animation = new THREE.Animation( animator, data );
+    //  var timescale = 0.5;
+        animation.loop = false;   // play once.
+        animation.timeScale = 0;  // is paused.
+        debugMode && console.log({"door animation": animation});
+
+    //  Elevator updater for "jquery-update-engine.js".
+        var updater = $('<input type="hidden">').get(0);
+        updater.id = "portal-door-updater";
+    //  var updatesSelector = "#updates";
+
+        function update() {
+
+        //  Deactivate updater.
+            if ( !animation.isPlaying ) {
+                $(updater).removeClass("update");
+                $updates = $(".update"); // $("input[type=hidden].update");
+                debugMode && console.warn({"deactivating door updaters": $(updater)});
+                debugMode && console.warn({"door animation is stopping": animation});
+                debugMode && console.log({"$updates": $updates});
+            }
+
+        //  Update door rotation.
+            if ( this.mesh.isOpen ) {
+
+                var max = animation.data.length;
+                if ( animation.currentTime < max )
+                    this.mesh.rotation.y = animation.currentTime; // openedValue.
+                if ( animation.currentTime == max )
+                    this.mesh.rotation.y = animation.currentTime; // openedValue.
+                if ( animation.currentTime > max )
+                    this.mesh.rotation.y = max;                   // openedValue.
+
+            } else { //  if ( !door.isOpen )
+
+                var min = animation.data.hierarchy[0].keys[0].time;
+                if ( animation.currentTime > min )
+                    this.mesh.rotation.y = animation.currentTime; // closedValue.
+                if ( animation.currentTime == min )
+                    this.mesh.rotation.y = animation.currentTime; // closedValue.
+                if ( animation.currentTime < min )
+                    this.mesh.rotation.y = min;                   // closedValue.
+            }
+
+            //debugMode && console.log( "door currentTime:", animation.currentTime.toFixed(2), 
+            //"rotation:", parseInt( THREE.Math.radToDeg(this.mesh.rotation.y).toFixed(0) ) );
+
+        }
+
+        function open( timescale ){
+
+            if ( this.isOpen ) return; // this: mesh.
+
+            var timescale = parseFloat( timescale );
+            if ( isNaN( timescale ) || timescale == 0 ) timescale = 1;
+            debugMode && console.log( "open timescale:", timescale );
+
+        //  console.log( localPlayer.controller.collisionCandidate.filter( filter( mesh ) ) );
+
+        //  Activate updater.
+            if ( !animation.isPlaying ) {
+                updater.mesh = this;
+
+            //  Start door animation.
+                animation.loop = false;
+                animation.interpolationType = 2; // LINEAR:0, CATMULLROM:1, CATMULLROM_FORWARD:2.
+
+            //  Play animation forward.
+                animation.timeScale = timescale;
+                animation.play(0);
+
+                this.isOpen = true; // this: mesh.
+                $(updater).addClass("update");            // IMPORTANT //
+                $updates = $(".update"); // $("input[type=hidden].update");
+
+            } else {
+
+                console.error("an other action is in progress...");
+
+            }
+
+        }
+
+        function close( timescale ){
+
+            if ( !this.isOpen ) return; // this: mesh.
+
+            var timescale = parseFloat( timescale );
+            if ( isNaN( timescale ) || timescale == 0 ) timescale = 1;
+            debugMode && console.log({"close timescale": timescale});
+
+        //  console.log( localPlayer.controller.collisionCandidate.filter( filter( mesh ) ) );
+
+        //  Activate updater.
+            if ( !animation.isPlaying ) {
+                updater.mesh = this;
+
+            //  Start door animation.
+                animation.loop = false;
+                animation.interpolationType = 2; // LINEAR:0, CATMULLROM:1, CATMULLROM_FORWARD:2.
+
+            //  Play animation backward.
+                animation.timeScale = -timescale;
+                animation.play(animation.data.length);
+
+                this.isOpen = false; // this: mesh.
+                $(updater).addClass("update");
+                $updates = $(".update"); // $("input[type=hidden].update");
+
+            } else {
+
+                console.error("an other action is in progress...");
+
+            }
+
+        }
+
+        (async function( mesh ){
+
+        //  Add door updater in updates elements.
+            $("#updates").append(updater);
+            $(updater).addClass("door");
+            updater.update = update;
+
+            return mesh;
+
+        })().then( function( mesh ){
+
+            var mesh = mesh.clone();
+            updater.mesh = mesh; // initial door.
+            mesh.position.set( x, y, z ); // ok.
+            octree.importThreeMesh( mesh );
+            octreeMeshHelpers.push( mesh );
+            var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+            mesh.open = open;
+            mesh.close = close;
+            scene.add( mesh );   // optional.
+            scene.add( helper ); // optional.
+
+            return mesh;
+
+        }).then( function( mesh ){
+
+            for ( var i = 1; i < 4; i++ ){
+                var mesh = mesh.clone();
+                mesh.position.x -= 100;
+                octree.importThreeMesh( mesh );
+                octreeMeshHelpers.push( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                mesh.open = open;
+                mesh.close = close;
+                scene.add( mesh );   // optional.
+                if (false) scene.add( helper ); // optional.
+            }
+
+            return mesh;
+
+        }).then( function( mesh ){
+
+            for ( var j = 2; j < floorlength; j++) {
+                var mesh = mesh.clone();
+                mesh.position.x = x;
+                mesh.position.y += floorheight;
+                octree.importThreeMesh( mesh );
+                octreeMeshHelpers.push( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                mesh.open = open; 
+                mesh.close = close; 
+                scene.add( mesh );   // optional.
+                if (false) scene.add( helper ); // optional.
+
+                for ( var i = 1; i < 4; i++ ){
+                    var mesh = mesh.clone();
+                    mesh.position.x -= 100;
+                    octree.importThreeMesh( mesh );
+                    octreeMeshHelpers.push( mesh );
+                    var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                    mesh.open = open;
+                    mesh.close = close;
+                    scene.add( mesh );   // optional.
+                    if (false) scene.add( helper ); // optional.
+                }
+            }
+        });
+
+    /*
+        var filter = function( mesh ) { 
+            return function( item ){
+                return item.meshID == mesh.geometry.uuid;
+            };
+        };
+    */
 
 
+    //  Door frames.
 
+        caches.match( apartDoorFrameUrl ).then(function(response){
 
+            if ( !response ) 
+                throw response;
+            else
+                return response;
 
+        }).catch(function(err){
 
+            return fetch( apartDoorFrameUrl );
+
+        }).then(async function(response){
+
+            var cache = await caches.open("geometries")
+                .then(function(cache){ return cache; });
+
+        //  Clone is needed because put() consumes the response body.
+        //  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
+
+            var clone = response.clone();
+            await cache.put( apartDoorFrameUrl, clone );
+            return response.json();
+
+        }).then(function(json){
+
+            return loadComponentAsset( json );
+
+        }).then( function( mesh ){
+            mesh.name = "apartment frame";
+            return mesh;
+        }).then( function( mesh ){
+            var mesh = mesh.clone();
+            mesh.position.set( x, y, z );
+            mesh.rotation.y = THREE.Math.degToRad( rotation );
+            scene.add( mesh );
+            return mesh;
+        }).then( function( mesh ){
+            for ( var i = 1; i < 4; i++ ){
+                var mesh = mesh.clone();
+                mesh.position.x -= 100;
+                scene.add( mesh );
+            }
+            return mesh;
+        }).then( function( mesh ){
+            for ( var j = 2; j < floorlength; j++) {
+                var mesh = mesh.clone();
+                mesh.position.x = x;
+                mesh.position.y += floorheight;
+                scene.add( mesh );
+                for ( var i = 1; i < 4; i++ ){
+                    var mesh = mesh.clone();
+                    mesh.position.x -= 100;
+                    scene.add( mesh );
+                }
+            }
+        });
+
+    }
 
 
 
