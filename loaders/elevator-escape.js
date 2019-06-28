@@ -3042,7 +3042,7 @@ function octreeNodeHelper(node){
     (function(){
 
         var octreeMeshHelpers = [];
-        var material = new THREE.MeshBasicMaterial({visible:true});
+        var material = new THREE.MeshBasicMaterial({visible:false});
 
         (function(){
 
@@ -3072,7 +3072,6 @@ function octreeNodeHelper(node){
         (function(){
 
             var geometry = new THREE.BoxGeometry( 798, 500, 10, 1,1,1);
-            var material = new THREE.MeshBasicMaterial({visible:true});
             var mesh = new THREE.Mesh(geometry, material);
             mesh.position.set( 0, 250, -4);
             octree.importThreeMesh( mesh );
