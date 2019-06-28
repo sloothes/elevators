@@ -3011,7 +3011,7 @@ function octreeNodeHelper(node){
 
 //  Build hallways.
 
-    await (async function(){
+    (function(){
         var octreeMeshHelpers = [];
 
         var material = new THREE.MeshStandardMaterial();
@@ -3030,15 +3030,16 @@ function octreeNodeHelper(node){
             if ( wireMode ) scene.add( helper ); // optional.
         }
 
-    });
+    })();
 
 //  Build walls.
 
-    await (async function(){
-        var octreeMeshHelpers = [];
+    var octreeMeshHelpers = [];
 
-        var material = new THREE.MeshBasicMaterial({visible:false});
+    (function(){
+
         var geometry = new THREE.BoxGeometry( 10, 500, 98, 1,1,1);
+        var material = new THREE.MeshBasicMaterial({visible:true});
         var mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(-394, 250, 40);
         octree.importThreeMesh( mesh );
@@ -3059,7 +3060,12 @@ function octreeNodeHelper(node){
             scene.add( helper ); // optional.
         }
 
+    })();
+
+    (function(){
+
         var geometry = new THREE.BoxGeometry( 798, 500, 10, 1,1,1);
+        var material = new THREE.MeshBasicMaterial({visible:true});
         var mesh = new THREE.Mesh(geometry, material);
         mesh.position.set( 0, 250, -4);
         octree.importThreeMesh( mesh );
@@ -3080,7 +3086,12 @@ function octreeNodeHelper(node){
             scene.add( helper ); // optional.
         }
 
+    })();
+
+    (function(){
+
         var geometry = new THREE.BoxGeometry( 460, 500, 50, 1,1,1);
+        var material = new THREE.MeshBasicMaterial({visible:true});
         var mesh = new THREE.Mesh(geometry, material);
         mesh.position.set( 0, 250, 25);
         octree.importThreeMesh( mesh );
@@ -3091,7 +3102,12 @@ function octreeNodeHelper(node){
             scene.add( helper ); // optional.
         }
 
+    })();
+
+    (function(){
+
         var geometry = new THREE.BoxGeometry( 10, 500, 50, 1,1,1);
+        var material = new THREE.MeshBasicMaterial({visible:true});
         var mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(270, 250, 20);
         octree.importThreeMesh( mesh );
@@ -3112,7 +3128,12 @@ function octreeNodeHelper(node){
             scene.add( helper ); // optional.
         }
 
+    })();
+
+    (function(){
+
         var geometry = new THREE.BoxGeometry( 798, 4, 98, 1,1,1);
+        var material = new THREE.MeshBasicMaterial({visible:true});
         var mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(0, 497, 40);
         octree.importThreeMesh( mesh );
@@ -3123,21 +3144,24 @@ function octreeNodeHelper(node){
             scene.add( helper ); // optional.
         }
 
-    //  Remove mesh helpers.
-        setTimeout( () => {
-            if ( !wireMode ) return;
-            octreeMeshHelpers.forEach( function( item, i ){
-                scene.remove( octreeMeshHelpers[i] );
-                var geometry = octreeMeshHelpers[i].geometry;
-                var material = octreeMeshHelpers[i].material;
-                geometry.dispose();
-                material.dispose();
-                octreeMeshHelpers[i] = null;
-            });
-            console.log( "Octree mesh helpers has been removed:", octreeMeshHelpers.filter(Boolean) );
-        }, 100);
-
     })();
+
+
+//  Remove mesh helpers.
+
+    setTimeout( () => {
+        if ( !wireMode ) return;
+        octreeMeshHelpers.forEach( function( item, i ){
+            scene.remove( octreeMeshHelpers[i] );
+            var geometry = octreeMeshHelpers[i].geometry;
+            var material = octreeMeshHelpers[i].material;
+            geometry.dispose();
+            material.dispose();
+            octreeMeshHelpers[i] = null;
+        });
+        console.log( "Octree mesh helpers has been removed:", octreeMeshHelpers.filter(Boolean) );
+    }, 100);
+
 
 //  Remove elevators mesh helpers.
 
