@@ -1964,8 +1964,7 @@ function octreeNodeHelper(node){
     }
 
 //  Build left stairs tower.
-
-    function buildLeftStairsTower( position, rotation, wireframe ){
+    async function buildLeftStairsTower( position, rotation, wireframe ){
 
         if ( !rotation ) rotation = 0;
         if ( !position ) position = new THREE.Vector3(0,0,0);
