@@ -2871,7 +2871,7 @@ function octreeNodeHelper(node){
 
         }
 
-        (async function( mesh ){
+        Promise.resolve(mesh).then( function( mesh ){
 
         //  Add door updater in updates elements.
             $("#updates").append(updater);
@@ -2880,7 +2880,7 @@ function octreeNodeHelper(node){
 
             return mesh;
 
-        })().then( function( mesh ){
+        }).then( function( mesh ){
 
             var mesh = mesh.clone();
             updater.mesh = mesh; // initial door.
