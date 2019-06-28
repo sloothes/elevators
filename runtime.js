@@ -35,7 +35,7 @@
     keyInputControls.On();
     localPlayer.controller.center.z = 95;
     localPlayer.controller.center.x = -250;
-    localPlayer.controller.direction = Math.PI;
+//  localPlayer.controller.direction = Math.PI;
 
 
 //  Runtime.
