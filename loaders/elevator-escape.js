@@ -2504,7 +2504,7 @@ function octreeNodeHelper(node){
 
                 return loadComponentAsset( json );
 
-            }).then( function( mesh ){
+            }).then(async function( mesh ){
 
                 group = new THREE.Group();
                 mesh.name = "wooden rail";
