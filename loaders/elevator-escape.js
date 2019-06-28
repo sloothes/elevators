@@ -1204,12 +1204,12 @@ function octreeNodeHelper(node){
 
     }
 
-//  Build stairtowers.
-    buildStairtower( new THREE.Vector3(370,0,0), 0, false );
-//  buildStairtowerMirror( new THREE.Vector3(-310,0,0), 0, false );
+//  Build stairs towers.
+    buildLeftStairsTower( new THREE.Vector3(-310,0,0), 0, false );
+    buildRightStairsTower( new THREE.Vector3(370,0,0), 0, false );
 
-//  Build stairtower.
-    async function buildStairtower( position, rotation, wireframe ){
+//  Build right stairs tower.
+    async function buildRightStairsTower( position, rotation, wireframe ){
 
         if ( !rotation ) rotation = 0;
         if ( !position ) position = new THREE.Vector3(0,0,0);
@@ -1963,6 +1963,734 @@ function octreeNodeHelper(node){
 
     }
 
+//  Build left stairs tower.
+
+    function buildLeftStairsTower( position, rotation, wireframe ){
+
+        if ( !rotation ) rotation = 0;
+        if ( !position ) position = new THREE.Vector3(0,0,0);
+
+        var x = position.x;  if ( isNaN(x) ) x = 0;
+        var y = position.y;  if ( isNaN(y) ) y = 0;
+        var z = position.z;  if ( isNaN(z) ) z = 0;
+        var rotation = THREE.Math.degToRad( rotation );
+
+        var octreeMeshHelpers = [];
+
+        var material = new THREE.MeshBasicMaterial({visible:false});
+        var standardMaterial = new THREE.MeshStandardMaterial();
+
+        await caches.match( staircasesUrl ).then(function(response){
+
+            if ( !response ) 
+                throw response;
+            else
+                return response;
+
+        }).catch(function(err){
+
+            return fetch( staircasesUrl );
+
+        }).then(async function(response){
+
+            var cache = await caches.open("geometries")
+                .then(function(cache){ return cache; });
+
+        //  Clone is needed because put() consumes the response body.
+        //  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
+
+            var clone = response.clone();
+            await cache.put( staircasesUrl, clone );
+            return response.json();
+
+
+        }).then( function( json ){
+
+            return loadComponentAsset( json );
+
+        }).then(async function( staircase ){
+
+            var component = new THREE.Group();
+            component.position.set(x, y, z);
+    
+        //  Stairs.
+
+            await caches.match( stairoctreeUrl ).then(function(response){
+
+                if ( !response ) 
+                    throw response;
+                else
+                    return response;
+
+            }).catch(function(err){
+
+                return fetch( stairoctreeUrl );
+
+            }).then(async function(response){
+
+                var cache = await caches.open("geometries")
+                    .then(function(cache){ return cache; });
+
+            //  Clone is needed because put() consumes the response body.
+            //  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
+
+                var clone = response.clone();
+                await cache.put( stairoctreeUrl, clone );
+                return response.json();
+
+            }).then( function( json ){
+                return loadComponentAsset( json );
+            }).then( function( mesh ){
+                mesh.material = material;
+                return mesh;
+            }).then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-29, y-0.5, z+37.5 );
+                mesh.rotation.y = THREE.Math.degToRad( 0 );
+                octree.importThreeMesh( mesh );
+                octreeMeshHelpers.push( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+                addStaircase( mesh );
+                for (var i = 0; i < 10; i++) {
+                    var mesh = mesh.clone();
+                    mesh.position.y += 2*floorheight/3;
+                    octree.importThreeMesh( mesh );
+                    octreeMeshHelpers.push( mesh );
+                    var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                    if ( wireframe ) {
+                        scene.add( mesh );   // optional.
+                        scene.add( helper ); // optional.
+                    }
+                    addStaircase( mesh );
+                }
+                return mesh;
+            }).then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-15, y+20.5, z+12 );
+                mesh.rotation.y = THREE.Math.degToRad( -180 );
+                octree.importThreeMesh( mesh );
+                octreeMeshHelpers.push( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+                addStaircase( mesh );
+                for (var i = 1; i < 10; i++) {
+                    var mesh = mesh.clone();
+                    mesh.position.y += 2*floorheight/3;
+                    octree.importThreeMesh( mesh );
+                    octreeMeshHelpers.push( mesh );
+                    var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                    if ( wireframe ) {
+                        scene.add( mesh );   // optional.
+                        scene.add( helper ); // optional.
+                    }
+                    addStaircase( mesh );
+                }
+            });
+
+        //  Walls.
+
+            await (async function(){
+                var geometry = new THREE.BoxGeometry(120, roofheight, 10, 1,1,1 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "wall back mirror";
+                octreeGeometries["wall_back_mirror"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-20, y+(roofheight/2), z+0 );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+            });
+
+            await (async function(){
+                var geometry = new THREE.BoxGeometry(10, roofheight, 60, 1,1,1 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "wall side mirror";
+                octreeGeometries["wall_side_mirror"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-80, y+(roofheight/2), z+25 );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+            });
+
+        //  Elevator walls.
+
+            await (async function(){
+                var geometry = new THREE.BoxGeometry(8, roofheight, 55, 1,1,1 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "elevator side wall mirror";
+                octreeGeometries["elevator_side_wall_mirror"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x+35, y+(roofheight/2), z+22.5  );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+            });
+
+        //  Stairs middle walls.
+
+            await (async function(){
+                var geometry = new THREE.BoxGeometry(50, roofheight, 8, 1,1,1 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "wall stairs middle mirror";
+                octreeGeometries["wall_stairs_middle_mirror"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-25, y+(roofheight/2), z+25 );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+                return mesh;
+            }).then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-25, y+(roofheight/2), z+50 );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+            });
+
+        //  Stairs middle columns.
+
+            await (async function(){
+                var geometry = new THREE.CylinderGeometry( 5, 5, 500, 6 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "column stairs middle mirror";
+                octreeGeometries["column_stairs_middle_mirror"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x+0, y+(roofheight/2), z+25 );
+                mesh.rotation.y = THREE.Math.degToRad( -90 )
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+                return mesh;
+            }).then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x+0, y+(roofheight/2), z+50 );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+                return mesh;
+            }).then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-50, y+(roofheight/2), z+25 );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+                return mesh;
+            }).then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-50, y+(roofheight/2), z+50 );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+                return mesh;
+            }).then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x+35, y+(roofheight/2), z+50 );
+                mesh.rotation.y = THREE.Math.degToRad( 0 )
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+            });
+
+        //  Flatboxes.
+
+            await (async function(){
+                var geometry = new THREE.BoxGeometry(30, 20, 50, 1,1,1 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "flatbox mirror";
+                octreeGeometries["flatbox_mirror"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-65, y+10, z+25 );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+                addflatstair( mesh );
+            });
+
+            await (async function(){
+                var geometry = new THREE.BoxGeometry(85, 20, 26, 1,1,1 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "understairs flatbox mirror";
+                octreeGeometries["understairs_flatbox_mirror"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-5, y+10, z+13 ); // ok.
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+            });
+
+            await (async function(){
+                var geometry = new THREE.BoxGeometry(55, 16, 26, 1,1,1 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "understairs flatbox mirror 1";
+                octreeGeometries["understairs_flatbox_mirror_1"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x+10, y+28, z+13 );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+            });
+
+        //  Flatstairs.
+
+            await (async function(){
+                var geometry = new THREE.BoxGeometry(30, 4, 50, 1,1,1 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "flatstair mirror";
+                octreeGeometries["flatstair_mirror"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-65, y-2+(floorheight/3), z+25 );
+                for (var i = 2; i < 12; i++) {
+                    var mesh = mesh.clone();
+                    mesh.position.y += 2*floorheight/3; // 41.5;
+                    octreeMeshHelpers.push( mesh );
+                    octree.importThreeMesh( mesh );
+                    var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                    if ( wireframe ) {
+                        scene.add( mesh );   // optional.
+                        scene.add( helper ); // optional.
+                    }
+                    addflatstair( mesh );
+                }
+            });
+
+            await (async function(){
+                var geometry = new THREE.BoxGeometry(40, 4, 50, 1,1,1 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "elevator flatstair mirror";
+                octreeGeometries["elevator_flatstair_mirror"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x+20, y-2, z+25 );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+                addflatstair( mesh );
+                return mesh;
+            }).then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.y += 2*floorheight/3;
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+                addflatstair( mesh );
+                return mesh;
+            }).then( function( mesh ){
+                for (var i = 1; i < 10; i++) {
+                    var mesh = mesh.clone();
+                    mesh.position.y += 2*floorheight/3;
+                    octreeMeshHelpers.push( mesh );
+                    octree.importThreeMesh( mesh );
+                    var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                    if ( wireframe ) {
+                        scene.add( mesh );   // optional.
+                        scene.add( helper ); // optional.
+                    }
+                    addflatstair( mesh );
+                }
+            });
+
+        //  Railwalls.
+
+            await (async function(){
+                var geometry = new THREE.BoxGeometry(30, floorheight, 8, 1,1,1 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "railwall mirror 1";
+                octreeGeometries["railwall_mirror_1"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-65, y+(floorheight/2)-2, z+50  );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+            });
+
+            await (async function(){
+                var geometry = new THREE.BoxGeometry(30, 4*floorheight/3, 8, 1,1,1 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "railwall mirror 2";
+                octreeGeometries["railwall_mirror_2"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-65, y+(7*floorheight/3)-2, z+50  );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+                return mesh;
+            }).then( function( mesh ){
+                for (var i = 1; i < 3; i++) {
+                    var mesh = mesh.clone();
+                    mesh.position.y += 2*floorheight;
+                    octreeMeshHelpers.push( mesh );
+                    octree.importThreeMesh( mesh );
+                    var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                    if ( wireframe ) {
+                        scene.add( mesh );   // optional.
+                        scene.add( helper ); // optional.
+                    }
+                }
+            });
+
+            await (async function(){
+                var geometry = new THREE.BoxGeometry(40, 4*floorheight/3, 8, 1,1,1 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "railwall mirror 3";
+                octreeGeometries["railwall_mirror_3"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x+20, y+(4*floorheight/3)-2, z+50  );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+                return mesh;
+            }).then( function( mesh ){
+                for (var i = 0; i < 3; i++) {
+                    var mesh = mesh.clone();
+                    mesh.position.y += 2*floorheight;
+                    octreeMeshHelpers.push( mesh );
+                    octree.importThreeMesh( mesh );
+                    var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                    if ( wireframe ) {
+                        scene.add( mesh );   // optional.
+                        scene.add( helper ); // optional.
+                    }
+                }
+            });
+
+            await (async function(){
+                var geometry = new THREE.BoxGeometry(15, 66, 35, 1,1,1 );
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.name = "railwall deadend mirror";
+                octreeGeometries["railwall_deadend_mirror"] = mesh.geometry.uuid;
+                return mesh;
+            })().then( function( mesh ){
+                var mesh = mesh.clone();
+                mesh.position.set( x-50, y+roofheight-(floorheight/2)-2, z+13  );
+                octreeMeshHelpers.push( mesh );
+                octree.importThreeMesh( mesh );
+                var helper = new THREE.EdgesHelper( mesh, 0x0000ff );
+                if ( wireframe ) {
+                    scene.add( mesh );   // optional.
+                    scene.add( helper ); // optional.
+                }
+            });
+
+        //  Rails.
+
+            await caches.match( woodenRailingUrl ).then(function(response){
+
+                if ( !response ) 
+                    throw response;
+                else
+                    return response;
+
+            }).catch(function(err){
+
+                return fetch( woodenRailingUrl );
+
+            }).then(async function(response){
+
+                var cache = await caches.open("geometries")
+                    .then(function(cache){ return cache; });
+
+            //  Clone is needed because put() consumes the response body.
+            //  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
+
+                var clone = response.clone();
+                await cache.put( woodenRailingUrl, clone );
+                return response.json();
+
+            }).then( function( json ){
+
+                return loadComponentAsset( json );
+
+            }).then( function( mesh ){
+
+                group = new THREE.Group();
+                mesh.name = "wooden rail";
+                mesh.scale.set(1,1,1);
+                mesh.rotation.y = THREE.Math.degToRad( 180 );
+                group.add( mesh );
+
+                await caches.match( railingPipeUrl ).then(function(response){
+
+                    if ( !response ) 
+                        throw response;
+                    else
+                        return response;
+
+                }).catch(function(err){
+
+                    return fetch( railingPipeUrl );
+
+                }).then(async function(response){
+
+                    var cache = await caches.open("geometries")
+                        .then(function(cache){ return cache; });
+
+                //  Clone is needed because put() consumes the response body.
+                //  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
+
+                    var clone = response.clone();
+                    await cache.put( railingPipeUrl, clone );
+                    return response.json();
+
+                }).then( function( json ){
+
+                    return loadComponentAsset( json );
+
+                }).then( function( pipe ){
+                //  Create rail component.
+                    pipe.name = "aluminum pipe";
+                    var pipe = pipe.clone();
+                    pipe.position.x = 1;
+                    group.add( pipe );
+                    for (var i = 0; i < 10; i++ ) {
+                        pipe = pipe.clone();
+                        pipe.position.x += 2;
+                        group.add( pipe );
+                    }
+                    return group;
+                });
+
+            }).then( function( group ){
+                var group = group.clone();
+                group.rotation.y = THREE.Math.degToRad(-180);
+                group.position.set( -55, 1.5+(floorheight/3), 49 );
+                component.add( group );
+                for (var i=0; i < 3; i++){
+                    var group = group.clone();
+                    group.position.y += 4*floorheight/3;
+                    component.add(group);
+                    var group = group.clone();
+                    group.position.y += 2*floorheight/3;
+                    component.add(group);
+                }
+                return group;
+            }).then( function( group ){
+                var group = group.clone();
+                group.position.set( 35, 1.5+(2*floorheight/3), 49 );
+                component.add( group );
+                for (var i=0; i < 3; i++){
+                    var group = group.clone();
+                    group.position.y += 2*floorheight/3;
+                    component.add(group);
+                    var group = group.clone();
+                    group.position.y += 4*floorheight/3;
+                    component.add(group);
+                }
+                return group;
+            }).then( function( group ){
+                var group = group.clone();
+                group.position.set( -55, 1.5+(floorheight/3), 1 );
+                component.add( group );
+                var group = group.clone();
+                component.add(group);
+                for (var i=0; i < 10; i++){
+                    var group = group.clone();
+                    group.position.y += 2*floorheight/3;
+                    component.add(group);
+                }
+                return group;
+            }).then( function( group ){
+                var group = group.clone();
+                group.position.set( 35, 1.5+(2*floorheight/3), 1 );
+                component.add( group );
+                for (var i=1; i < 10; i++){
+                    var group = group.clone();
+                    group.position.y += 2*floorheight/3;
+                    component.add(group);
+                }
+                return group;
+            }).then( function( group ){
+                var group = group.clone();
+                group.position.set( 35, 1.5, 23 );
+                component.add( group );
+                var group = group.clone();
+                group.rotation.y = THREE.Math.degToRad(-90);
+                component.add( group );
+                return group;
+            }).then( function( group ){
+                var group = group.clone();
+                group.rotation.y = THREE.Math.degToRad(-90);
+                group.position.set( -54, 1.5+( (floorlength-1)*(3*floorheight/3) ), 0 );
+                component.add( group );
+                return group;
+            }).then(function(group){
+            //  Create new component.
+                var group = group.clone();
+                var scale = 2.24;
+                group.children.length = 2;
+                group.children[0].scale.x = scale;
+                group.position.set( -78, 1.5+(floorheight/3), 0 );
+            //  group.rotation.y = THREE.Math.degToRad(-90)
+                var pipe = group.children[1];
+                for (var i = 1; i < 11 * scale; i++){
+                    var pipe = pipe.clone();
+                    pipe.position.x += 2;
+                    group.add( pipe );
+                }
+                component.add( group );
+                for (var i=2; i < 12; i++){
+                    var group = group.clone();
+                    group.position.y += 2*floorheight/3;
+                    component.add(group);
+                }
+                return group;
+            }).then(function( group ){
+                var group = group.clone();
+                group.position.set( 35, 1.5+(2*floorheight/3), 0 );
+                component.add( group );
+                for (var i=1; i < 10; i++){
+                    var group = group.clone();
+                    group.position.y += 2*floorheight/3;
+                    component.add(group);
+                }
+                return group;
+            });
+
+
+        //  Remove octree mesh helpers.
+            setTimeout( function(){
+                if ( !wireframe ) return;
+                octreeMeshHelpers.forEach( function( item, i ){
+                    scene.remove( octreeMeshHelpers[i] );
+                    var geometry = octreeMeshHelpers[i].geometry;
+                    geometry.dispose();
+                    octreeMeshHelpers[i] = null;
+                });
+                console.log( "Octree mesh helpers has been removed:", octreeMeshHelpers.filter(Boolean) );
+            }, 100);
+
+
+            scene.add( component );  // left stairstower.
+
+
+            function addflatstair( mesh ){
+                var mesh = mesh.clone();
+                mesh.material = standardMaterial;
+                mesh.position.x -= x;
+                mesh.position.y -= y;
+                mesh.position.z -= z;
+                component.add( mesh );
+            }
+
+            function addStaircase( object ){
+                if ( !stairMode ) return;
+                var stairs = staircase.clone();
+                stairs.rotation.copy(object.rotation);
+                stairs.position.copy(object.position);
+                stairs.position.x -= x;
+                stairs.position.y -= y;
+                stairs.position.z -= z;
+                component.add(stairs);
+                return stairs;
+            }
+
+        });
+
+    }
 
 
 
