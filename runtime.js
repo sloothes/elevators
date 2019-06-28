@@ -36,6 +36,7 @@
     localPlayer.controller.center.z = 70;
     localPlayer.controller.center.x = -250;
 //  localPlayer.controller.direction = Math.PI;
+    if (isMobile) cameraControls.radius = 70;
 
 
 //  Runtime.
