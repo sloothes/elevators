@@ -817,7 +817,6 @@ function octreeNodeHelper(node){
                 }
             });
 
-            var collisionCandidate = localPlayer.controller.collisionCandidate;
 
             elevatorUpdater.update = () => {
 
@@ -827,6 +826,7 @@ function octreeNodeHelper(node){
             //  Elevator doors handler.
                 var name = animation.data.name; // e.g. "elevetor"
                 var animationCache = animator.animationCache.animations[name];
+                var collisionCandidate = localPlayer.controller.collisionCandidate;
 
                 var currentTime  = animation.currentTime;
                 var prevKeyIndex = animationCache.prevKey.pos.index;
