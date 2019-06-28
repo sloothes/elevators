@@ -2693,7 +2693,7 @@ function octreeNodeHelper(node){
     }
 
 //  Build apartment doors.
-    buildApartmentDoors( new THREE.Vector3( 160, 0, 52 ), 0 ),
+    buildApartmentDoors( new THREE.Vector3( 160, 0, 52 ), 0 );
 
     function buildApartmentDoors( position, rotation, timescale ){
 
