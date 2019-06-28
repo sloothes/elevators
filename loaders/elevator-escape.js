@@ -3137,7 +3137,7 @@ function octreeNodeHelper(node){
             console.log( "Octree mesh helpers has been removed:", octreeMeshHelpers.filter(Boolean) );
         }, 100);
 
-    });
+    })();
 
 //  Remove elevators mesh helpers.
 
