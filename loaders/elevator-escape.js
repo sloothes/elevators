@@ -773,6 +773,7 @@ function octreeNodeHelper(node){
             var doorClosing = new Signal();
 
             doorOpening.add(function( door ){
+                debugMode && console.log( animator.animationCache.animations);
 
                 var name = animation.data.name; // e.g. "elevetor"
                 var currentTime = animation.currentTime;
