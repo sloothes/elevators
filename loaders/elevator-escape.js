@@ -2506,7 +2506,7 @@ function octreeNodeHelper(node){
 
             }).then(async function( mesh ){
 
-                group = new THREE.Group();
+                var group = new THREE.Group();
                 mesh.name = "wooden rail";
                 mesh.scale.set(1,1,1);
                 mesh.rotation.y = THREE.Math.degToRad( 180 );
@@ -2550,8 +2550,9 @@ function octreeNodeHelper(node){
                         pipe.position.x += 2;
                         group.add( pipe );
                     }
-                    return group;
                 });
+
+                return group;
 
             }).then( function( group ){
                 var group = group.clone();
