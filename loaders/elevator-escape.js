@@ -818,7 +818,7 @@ function octreeNodeHelper(node){
 
             var collisionCandidate = localPlayer.controller.collisionCandidate;
 
-            elevatorUpdater.update = function(){
+            elevatorUpdater.update = () => {
 
             //  Current floor.
                 elevatorUpdater.floor = elevator.floor = parseInt( animator.position.y / floorheight );
@@ -981,7 +981,7 @@ function octreeNodeHelper(node){
             //  Activate updater.
                 $(elevatorSelector).addClass("update");
             //  Update "$updates" list to start updating.
-                $updates = $(".update");   // IMPORTANT //
+                $updates = $(".update");
             };
 
             elevator.stop = () => {
@@ -990,7 +990,7 @@ function octreeNodeHelper(node){
             //  Disactivate updater.
                 $(elevatorSelector).removeClass("update");
             //  Update "$update" list to start updating.
-                $updates = $(".update");   // IMPORTANT //
+                $updates = $(".update");
             };
 
         //  return mesh;
