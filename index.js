@@ -39,6 +39,15 @@
     scene.fog = new THREE.FogExp2(0xb1c8e8, 0.00075);
     camera = new FpsCamera(50, 1, 10000);
 
+    sceneBackground([
+        "/elevators/skybox/posx.jpg", // "posx.jpg",
+        "/elevators/skybox/negx.jpg", // "negx.jpg", 
+        "/elevators/skybox/posy.jpg", // "posy.jpg", 
+        "/elevators/skybox/negy.jpg", // "negy.jpg", 
+        "/elevators/skybox/posz.jpg", // "posz.jpg", 
+        "/elevators/skybox/negz.jpg", // "negz.jpg"
+    ]);
+
     camera.position.set(0, 20, 100);
 //  controls = new THREE.EditorControls(camera);
     if ( controls && controls instanceof THREE.EditorControls ) {
